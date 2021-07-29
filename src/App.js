@@ -37,14 +37,11 @@ const post_save = async (data, id, buid) => {
     alert("Cannot save data larger than 5mb");
     return;
   }
-  const res = await axios.post(
-    "https://sv32s9ipr6.execute-api.ap-south-1.amazonaws.com/dev/content",
-    {
-      data,
-      buid,
-      id,
-    }
-  );
+  const res = await axios.post("https://api.stagbin.tk/dev/content", {
+    data,
+    buid,
+    id,
+  });
   if (res.status === 200) {
     navigator.clipboard.writeText("https://stagbin.tk/" + res.data.id);
     alert("Url copied to clipboard");

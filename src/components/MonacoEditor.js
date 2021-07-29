@@ -7,10 +7,7 @@ let reqData = {};
 const getData = async (setData, id) => {
   // setLoading(true);
   const res = await axios
-    .get(
-      "https://sv32s9ipr6.execute-api.ap-south-1.amazonaws.com/dev/content/" +
-        id
-    )
+    .get("https://api.stagbin.tk/dev/content/" + id)
     .catch((err) => {
       // alert("invalid url");
       window.location.href = "https://stagbin.tk";
