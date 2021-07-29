@@ -16,17 +16,19 @@ import { lightTheme, darkTheme } from "./components/Themes";
 import MediaQuery from "react-responsive";
 import axios from "axios";
 
+import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+
 const get_and_set_systemid = async () => {
   let system_id = localStorage.getItem("stagbin_system_id");
-  if (!system_id) {
-    let res = await axios.get("https://api.stagbin.tk/paste/newSystemID");
-    system_id = res.data.system_id;
+  const valid_system_id = uuidValidate(system_id);
+  if (!system_id || !valid_system_id) {
+    system_id = uuidv4();
     localStorage.setItem("stagbin_system_id", system_id);
   }
   return system_id;
 };
 
-const post_save = async (data, custom_url_code, system_id) => {
+const post_save = async (data, id, buid) => {
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
   }
@@ -35,15 +37,18 @@ const post_save = async (data, custom_url_code, system_id) => {
     alert("Cannot save data larger than 5mb");
     return;
   }
-  const res = await axios.post("https://api.stagbin.tk/paste/new", {
-    data,
-    system_id,
-    custom_url_code,
-  });
+  const res = await axios.post(
+    "https://sv32s9ipr6.execute-api.ap-south-1.amazonaws.com/dev/content",
+    {
+      data,
+      buid,
+      id,
+    }
+  );
   if (res.status === 200) {
-    navigator.clipboard.writeText(res.data.shortUrl);
+    navigator.clipboard.writeText("https://stagbin.tk/" + res.data.id);
     alert("Url copied to clipboard");
-    window.location.href = res.data.shortUrl;
+    window.location.href = "https://stagbin.tk/" + id;
   } else {
     console.log(res.status);
     console.log(res.data);
