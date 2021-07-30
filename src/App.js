@@ -1,8 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
-// import MyEditor from "./components/MyEditor";
-// import TopBar from "./components/Topbar";
-// import BottomBar from "./components/BottomBar";
 import MEditor from "./components/MonacoEditor";
 import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
@@ -70,9 +67,7 @@ const post_save = async (
 
 function App() {
   let localTheme = localStorage.getItem("stagbin_theme");
-  // const history = useHistory();
-
-  // console.log(history);
+  const base_url = window.location.origin;
 
   const [theme, setTheme] = useState(localTheme ? localTheme : "light");
   const [readOnly, setReadOnly] = useState(false);
@@ -81,7 +76,6 @@ function App() {
   const [data, setData] = useState(
     "//Enter text and press ctrl + s to save, this also acts as a url shortner if you paste a http(s) url instead"
   );
-  const [base_url, setBaseUrl] = useState(window.location.origin);
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
 
