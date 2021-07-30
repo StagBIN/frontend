@@ -19,7 +19,7 @@ const getData = async (setData, id, base_url) => {
     setData(reqData.data);
     // setLoading(false);
   }
-  if (reqData.isUrl) {
+  if (reqData.url) {
     window.location.href = reqData.data;
   }
 };
