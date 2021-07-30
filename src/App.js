@@ -8,6 +8,10 @@ import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
 import BottomAppBar from "./components/BottomAppBar";
 
+// For Alerts
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 // For Theme
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/GlobalStyles";
@@ -17,6 +21,10 @@ import MediaQuery from "react-responsive";
 import axios from "axios";
 
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+
+function CustomAlert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const get_and_set_systemid = async () => {
   let system_id = localStorage.getItem("stagbin_system_id");
@@ -28,13 +36,13 @@ const get_and_set_systemid = async () => {
   return system_id;
 };
 
-const post_save = async (data, id, buid) => {
+const post_save = async (data, id, buid, setSuccess, setSizeWarning) => {
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
   }
   const size = byteCount(data) / (1024 * 1024);
   if (size > 5) {
-    alert("Cannot save data larger than 5mb");
+    setSizeWarning(true);
     return;
   }
   const res = await axios.post("https://api.stagbin.tk/dev/content", {
@@ -44,7 +52,7 @@ const post_save = async (data, id, buid) => {
   });
   if (res.status === 200) {
     navigator.clipboard.writeText("https://stagbin.tk/" + res.data.id);
-    alert("Url copied to clipboard");
+    setSuccess(true);
     window.location.href = "https://stagbin.tk/" + id;
   } else {
     console.log(res.status);
@@ -66,6 +74,8 @@ function App() {
     "//Enter text and press ctrl + s to save, this also acts as a url shortner if you paste a http(s) url instead"
   );
 
+  const [success, setSuccess] = useState(false);
+  const [size_warning, setSizeWarning] = useState(false);
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
     localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -88,7 +98,16 @@ function App() {
 
   const invokeSave = async () => {
     const system_id = await get_and_set_systemid();
-    post_save(data, url, system_id);
+    post_save(data, url, system_id, setSuccess, setSizeWarning);
+  };
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccess(false);
+    setSizeWarning(false);
   };
 
   return (
@@ -155,6 +174,24 @@ function App() {
               <BottomAppBar curTheme={theme} />
             </div>
           </Router>
+          <Snackbar
+            open={success}
+            onClose={handleCloseSnackBar}
+            autoHideDuration={3000}
+          >
+            <CustomAlert onClose={handleCloseSnackBar} severity="success">
+              Paste saved successfully
+            </CustomAlert>
+          </Snackbar>
+          <Snackbar
+            open={size_warning}
+            onClose={handleCloseSnackBar}
+            autoHideDuration={6000}
+          >
+            <CustomAlert onClose={handleCloseSnackBar} severity="warning">
+              Content cannot be more than 5mb
+            </CustomAlert>
+          </Snackbar>
         </div>
       </>
     </ThemeProvider>
