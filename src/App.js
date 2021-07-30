@@ -36,7 +36,14 @@ const get_and_set_systemid = async () => {
   return system_id;
 };
 
-const post_save = async (data, id, buid, setSuccess, setSizeWarning) => {
+const post_save = async (
+  data,
+  id,
+  buid,
+  base_url,
+  setSuccess,
+  setSizeWarning
+) => {
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
   }
@@ -51,9 +58,10 @@ const post_save = async (data, id, buid, setSuccess, setSizeWarning) => {
     id,
   });
   if (res.status === 200) {
-    navigator.clipboard.writeText("https://stagbin.tk/" + res.data.id);
+    navigator.clipboard.writeText(base_url + "/" + res.data.id);
     setSuccess(true);
-    window.location.href = "https://stagbin.tk/" + id;
+    console.log(base_url);
+    window.location.href = base_url + "/" + res.data.id;
   } else {
     console.log(res.status);
     console.log(res.data);
@@ -73,9 +81,10 @@ function App() {
   const [data, setData] = useState(
     "//Enter text and press ctrl + s to save, this also acts as a url shortner if you paste a http(s) url instead"
   );
-
+  const [base_url, setBaseUrl] = useState(window.location.origin);
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
+
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
     localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -98,7 +107,7 @@ function App() {
 
   const invokeSave = async () => {
     const system_id = await get_and_set_systemid();
-    post_save(data, url, system_id, setSuccess, setSizeWarning);
+    post_save(data, url, system_id, base_url, setSuccess, setSizeWarning);
   };
 
   const handleCloseSnackBar = (event, reason) => {
@@ -155,6 +164,7 @@ function App() {
                   setData={setData}
                   invokeSave={invokeSave}
                   language={language}
+                  base_url={base_url}
                 />
               </Route>
               <Route path="/:id">
@@ -167,6 +177,7 @@ function App() {
                   data={data}
                   setData={setData}
                   language={language}
+                  base_url={base_url}
                 />
               </Route>
             </Switch>

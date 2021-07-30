@@ -4,13 +4,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 let reqData = {};
-const getData = async (setData, id) => {
+const getData = async (setData, id, base_url) => {
   // setLoading(true);
   const res = await axios
     .get("https://api.stagbin.tk/dev/content/" + id)
     .catch((err) => {
       // alert("invalid url");
-      window.location.href = "https://stagbin.tk";
+      window.location.href = base_url;
     });
   console.log(res);
   if (res.status === 200) {
@@ -32,12 +32,13 @@ export default function MEditor(props) {
   const setUrl = props.setUrl;
   const isDiff = false;
   const [data, setData] = [props.data, props.setData];
+  const base_url = props.base_url;
   // const [loading, setLoading] = useState(false);
   const { id } = useParams();
   if (id) {
     setReadOnly(true);
     setUrl(id);
-    getData(setData, id);
+    getData(setData, id, base_url);
   }
   // if (data) {
   //   document.getElementById("m-placeholder").style.display = "none";
