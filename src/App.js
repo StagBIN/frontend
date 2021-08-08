@@ -45,7 +45,7 @@ const post_save = async (
     return encodeURI(s).split(/%..|./).length - 1;
   }
   const size = byteCount(data) / (1024 * 1024);
-  if (size > 5) {
+  if (size > 0.4) {
     setSizeWarning(true);
     return;
   }
@@ -69,7 +69,7 @@ function App() {
   let localTheme = localStorage.getItem("stagbin_theme");
   const base_url = window.location.origin;
 
-  const [theme, setTheme] = useState(localTheme ? localTheme : "light");
+  const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
   const [language, setLanguage] = useState("python");
   const [url, setUrl] = useState("");
@@ -192,7 +192,7 @@ function App() {
             autoHideDuration={6000}
           >
             <CustomAlert onClose={handleCloseSnackBar} severity="warning">
-              Content cannot be more than 5mb
+              Content cannot be more than 400kb (Increased soon)
             </CustomAlert>
           </Snackbar>
         </div>
