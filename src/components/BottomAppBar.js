@@ -29,10 +29,7 @@ export default function BottomAppBar(props) {
             <small>&copy; Copyright 2021, StagBIN</small>
           </a>
           <div style={{ margin: "8px" }}>
-            <a
-              href="https://github.com/vjspranav/Stagbin"
-              style={{ color: "inherit" }}
-            >
+            <a href="https://github.com/StagBin" style={{ color: "inherit" }}>
               <h4 style={{ margin: 0 }}>Source</h4>
             </a>
           </div>

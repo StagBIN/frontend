@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Editor, { DiffEditor } from "@monaco-editor/react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -32,7 +31,6 @@ export default function MEditor(props) {
   const setUrl = props.setUrl;
   const isDiff = false;
   const [data, setData] = [props.data, props.setData];
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
   const base_url = props.base_url;
   // const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -65,7 +63,9 @@ export default function MEditor(props) {
           top: "65px",
           left: "64px",
           zIndex: 2,
-          display: showPlaceholder ? (data ? "none" : "block") : "none",
+          display: data ? "none" : "block",
+          pointerEvents: "none",
+          opacity: 0.5,
         }}
       >
         Enter text and press ctrl + s to save, this also acts as a url shortner
@@ -79,9 +79,6 @@ export default function MEditor(props) {
         colorDecorators="true"
         options={{
           readOnly: readOnly,
-        }}
-        onClick={() => {
-          setShowPlaceholder(false);
         }}
         onChange={(value, event) => {
           setData(value);
