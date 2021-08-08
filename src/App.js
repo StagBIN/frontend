@@ -73,9 +73,7 @@ function App() {
   const [readOnly, setReadOnly] = useState(false);
   const [language, setLanguage] = useState("python");
   const [url, setUrl] = useState("");
-  const [data, setData] = useState(
-    "//Enter text and press ctrl + s to save, this also acts as a url shortner if you paste a http(s) url instead"
-  );
+  const [data, setData] = useState("");
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
 
