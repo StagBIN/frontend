@@ -16,12 +16,12 @@ import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
+// import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
+// import InputLabel from "@material-ui/core/InputLabel";
+// import InputAdornment from "@material-ui/core/InputAdornment";
+// import IconButton from "@material-ui/core/IconButton";
+// import Input from "@material-ui/core/Input";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -114,7 +114,7 @@ export default function BackToTop(props) {
   // const isEditing = props.isEditing;
   // 0 = white, 1 = dark
   const [icon, setIcon] = useState(curTheme === "dark");
-  const [url, setUrl] = [props.url, props.setUrl];
+  // const [url, setUrl] = [props.url, props.setUrl];
   const readOnly = props.readOnly;
   const invokeSave = props.invokeSave;
 
@@ -131,41 +131,9 @@ export default function BackToTop(props) {
               marginLeft: "30px",
               marginTop: "0",
             }}
-          >
-            <InputLabel htmlFor="custom-url">URL</InputLabel>
-            <Input
-              id="custom-url"
-              disabled={readOnly ? true : false}
-              type="text"
-              value={url}
-              onChange={(e) => {
-                console.log(e.target.value);
-                setUrl(e.target.value);
-              }}
-              style={{ color: "inherit", width: "50%" }}
-              endAdornment={
-                readOnly ? (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="cop"
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          "https://stagbin.tk/" + url
-                        );
-                      }}
-                    >
-                      <FileCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ) : (
-                  ""
-                )
-              }
-            />
-          </FormControl>
+          ></FormControl>
           <div style={{ display: "inline-flex" }}>
-            <FormControl className={classes.margin}>
-              <InputLabel id="demo-customized-select-label">Option</InputLabel>
+            <FormControl>
               <Select
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
