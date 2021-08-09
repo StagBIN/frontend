@@ -1,11 +1,9 @@
-name: production
+name: dev
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
 on:
   push:
-    branches: [ main ]
-    
+    branches: [ dev ]
+
 jobs:
   build:
     name: Build
@@ -38,24 +36,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
-      - name: Setup AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
-          
+        
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: build-assets
           path: build
-       
-      - name: Upload artifact to S3
-        run: |
-          aws s3 cp build/ s3://frontend-stagbin --recursive
-      
-      - name: Invalidate Cloudfront cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
