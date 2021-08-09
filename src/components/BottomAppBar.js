@@ -15,13 +15,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BottomAppBar(props) {
+  const curTheme = props.curTheme;
   const classes = useStyles();
   return (
     <React.Fragment>
       <CssBaseline />
       <AppBar
         position="fixed"
-        style={{ background: "inherit", color: "inherit" }}
+        style={{
+          background: curTheme === "light" ? "white" : "#363537",
+          color: "inherit",
+          zIndex: 2,
+        }}
         className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
