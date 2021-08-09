@@ -55,3 +55,7 @@ jobs:
       - name: Upload artifact to S3
         run: |
           aws s3 cp build/ s3://frontend-stagbin --recursive
+      
+      - name: Invalidate Cloudfront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
