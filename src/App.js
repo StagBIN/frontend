@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
 import MEditor from "./components/MonacoEditor";
-import PEditor from "./components/PrismEditor";
+import PEditor from "./components/AceEditor";
 import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
 import BottomAppBar from "./components/BottomAppBar";
