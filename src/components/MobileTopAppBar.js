@@ -4,7 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Fab from "@material-ui/core/Fab";
@@ -20,12 +20,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import FormControl from "@material-ui/core/FormControl";
 // import InputLabel from "@material-ui/core/InputLabel";
 // import InputAdornment from "@material-ui/core/InputAdornment";
-// import IconButton from "@material-ui/core/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 // import Input from "@material-ui/core/Input";
-
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,40 +40,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
   },
 }));
-
-const BootstrapInput = withStyles((theme) => ({
-  root: {
-    "label + &": {
-      marginTop: theme.spacing(3),
-    },
-  },
-  input: {
-    borderRadius: 4,
-    position: "relative",
-    backgroundColor: theme.palette.background.paper,
-    border: "1px solid #ced4da",
-    fontSize: 16,
-    transition: theme.transitions.create(["border-color", "box-shadow"]),
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
-      '"Segoe UI"',
-      "Roboto",
-      '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(","),
-    "&:focus": {
-      borderRadius: 4,
-      borderColor: "#80bdff",
-      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)",
-    },
-  },
-}))(InputBase);
 
 function ScrollTop(props) {
   const { children, window } = props;
@@ -123,7 +86,13 @@ export default function BackToTop(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar style={{ background: "inherit", color: "inherit" }}>
+      <AppBar
+        style={{
+          background: curTheme === "light" ? "white" : "#363537",
+          color: "inherit",
+          zIndex: 2,
+        }}
+      >
         <Toolbar className={classes.centerItems}>
           <Typography variant="h6">StagBIN</Typography>
           <FormControl
@@ -133,50 +102,36 @@ export default function BackToTop(props) {
             }}
           ></FormControl>
           <div style={{ display: "inline-flex" }}>
-            <FormControl>
-              <Select
-                labelId="demo-customized-select-label"
-                id="demo-customized-select"
-                // value={}
-                onChange={(event) => {
-                  switch (event.target.value) {
-                    case "save":
-                      invokeSave();
-                      break;
-                    case "new":
-                      window.location.href = "https://stagbin.tk";
-                      break;
-                    case "edit":
-                      break;
-                    default:
-                      break;
-                  }
+            {readOnly ? (
+              <Tooltip title="Edit">
+                <IconButton edge="end" color="inherit" aria-label="Save">
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Save">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={invokeSave}
+                >
+                  <SaveIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="New Paste">
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="Save"
+                onClick={() => {
+                  window.location.href = "https://stagbin.tk";
                 }}
-                input={<BootstrapInput />}
               >
-                {readOnly ? (
-                  <MenuItem value="edit">
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <EditIcon />
-                      <div>Edit</div>
-                    </div>
-                  </MenuItem>
-                ) : (
-                  <MenuItem value="save">
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <SaveIcon />
-                      <div>Save</div>
-                    </div>
-                  </MenuItem>
-                )}
-                <MenuItem value="new">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <AddIcon />
-                    <div>New</div>
-                  </div>
-                </MenuItem>
-              </Select>
-            </FormControl>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
             <Button
               color="inherit"
               onClick={() => {
