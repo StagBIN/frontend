@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useState } from "react";
 import MEditor from "./components/MonacoEditor";
+import PEditor from "./components/PrismEditor";
 import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
 import BottomAppBar from "./components/BottomAppBar";
@@ -146,31 +147,62 @@ function App() {
             </div>
             <Switch>
               <Route exact path="/">
-                <MEditor
-                  curTheme={theme}
-                  readOnly={readOnly}
-                  setReadOnly={setReadOnly}
-                  url={url}
-                  setUrl={setUrl}
-                  data={data}
-                  setData={setData}
-                  invokeSave={invokeSave}
-                  language={language}
-                  base_url={base_url}
-                />
+                <MediaQuery maxWidth={480}>
+                  <PEditor
+                    curTheme={theme}
+                    readOnly={readOnly}
+                    setReadOnly={setReadOnly}
+                    url={url}
+                    setUrl={setUrl}
+                    data={data}
+                    setData={setData}
+                    invokeSave={invokeSave}
+                    language={language}
+                    base_url={base_url}
+                  />
+                </MediaQuery>
+                <MediaQuery minWidth={480}>
+                  <MEditor
+                    curTheme={theme}
+                    readOnly={readOnly}
+                    setReadOnly={setReadOnly}
+                    url={url}
+                    setUrl={setUrl}
+                    data={data}
+                    setData={setData}
+                    invokeSave={invokeSave}
+                    language={language}
+                    base_url={base_url}
+                  />
+                </MediaQuery>
               </Route>
               <Route path="/:id">
-                <MEditor
-                  curTheme={theme}
-                  readOnly={readOnly}
-                  setReadOnly={setReadOnly}
-                  url={url}
-                  setUrl={setUrl}
-                  data={data}
-                  setData={setData}
-                  language={language}
-                  base_url={base_url}
-                />
+                <MediaQuery maxWidth={480}>
+                  <PEditor
+                    curTheme={theme}
+                    readOnly={readOnly}
+                    setReadOnly={setReadOnly}
+                    url={url}
+                    setUrl={setUrl}
+                    data={data}
+                    setData={setData}
+                    language={language}
+                    base_url={base_url}
+                  />
+                </MediaQuery>
+                <MediaQuery minWidth={480}>
+                  <MEditor
+                    curTheme={theme}
+                    readOnly={readOnly}
+                    setReadOnly={setReadOnly}
+                    url={url}
+                    setUrl={setUrl}
+                    data={data}
+                    setData={setData}
+                    language={language}
+                    base_url={base_url}
+                  />
+                </MediaQuery>
               </Route>
             </Switch>
             <div>
