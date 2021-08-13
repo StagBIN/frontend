@@ -90,7 +90,7 @@ export default function BackToTop(props) {
         style={{
           background: curTheme === "light" ? "white" : "#363537",
           color: "inherit",
-          zIndex: 2,
+          zIndex: 999,
         }}
       >
         <Toolbar className={classes.centerItems}>
