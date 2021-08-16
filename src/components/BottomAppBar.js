@@ -25,7 +25,7 @@ export default function BottomAppBar(props) {
         style={{
           background: curTheme === "light" ? "white" : "#363537",
           color: "inherit",
-          zIndex: 2,
+          zIndex: 999,
         }}
         className={classes.appBar}
       >
