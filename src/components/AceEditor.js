@@ -64,6 +64,7 @@ export default function PEditor(props) {
         onChange={(currentCode) => setData(currentCode)}
         highlightActiveLine={true}
         height="85vh"
+        width="100%"
         readOnly={readOnly}
       />
     </div>
