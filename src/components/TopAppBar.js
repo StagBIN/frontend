@@ -27,6 +27,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
+import MarkdownIcon from "./icons/MarkdownIcon";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "fixed",
@@ -94,7 +96,12 @@ export default function BackToTop(props) {
   console.log(readOnly);
   const classes = useStyles();
   const invokeSave = props.invokeSave;
-  const setLanguage = props.setLanguage;
+  const [language, setLanguage] = [props.language, props.setLanguage];
+  const [isMarkdownView, updateIsMarkdownView] = [
+    props.isMarkdownView,
+    props.updateIsMarkdownView,
+  ];
+
   // const setReadOnly = props.setReadOnly;
 
   return (
@@ -155,6 +162,7 @@ export default function BackToTop(props) {
                   setLanguage(event.target.value);
                 }}
               >
+                <MenuItem value="markdown">Markdown</MenuItem>
                 <MenuItem style={{ color: "inherit" }} value="javascript">
                   Javascript
                 </MenuItem>
@@ -166,6 +174,22 @@ export default function BackToTop(props) {
                 <MenuItem value="java">Java</MenuItem>
               </Select>
             </FormControl>
+            {readOnly || language === "markdown" ? (
+              <Tooltip title={"Markdown " + (readOnly ? "View" : "Preview")}>
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    updateIsMarkdownView(!isMarkdownView);
+                  }}
+                >
+                  <MarkdownIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
             {readOnly ? (
               <Tooltip title="Edit">
                 <IconButton edge="end" color="inherit" aria-label="Save">

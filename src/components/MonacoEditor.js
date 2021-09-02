@@ -1,4 +1,5 @@
 import Editor, { DiffEditor } from "@monaco-editor/react";
+import MDEditor from "@uiw/react-md-editor";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -30,6 +31,7 @@ export default function MEditor(props) {
   const setReadOnly = props.setReadOnly;
   const setUrl = props.setUrl;
   const isDiff = false;
+  const isMarkdownView = props.isMarkdownView;
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
   // const [loading, setLoading] = useState(false);
@@ -86,6 +88,16 @@ export default function MEditor(props) {
       />
     </div>
   );
+  const mkeditor = (
+    <div
+      className="container"
+      style={{
+        overflow: "hidden",
+      }}
+    >
+      <MDEditor.Markdown source={data} />
+    </div>
+  );
   console.log(language);
-  return isDiff ? diffEditor : editor;
+  return isDiff ? diffEditor : isMarkdownView ? mkeditor : editor;
 }
