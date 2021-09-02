@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(1),
     right: theme.spacing(2),
     minHeight: "10px",
+    zIndex: 9999,
   },
   centerItems: {
     justifyContent: "space-between",
