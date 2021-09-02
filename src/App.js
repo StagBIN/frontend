@@ -103,11 +103,13 @@ function App() {
   const [language, setLanguage] = useState("python");
   const [url, setUrl] = useState("");
   const [data, setData] = useState("");
+  const [oldData, setOldData] = useState("");
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
   const [contentbuid, setContentBuid] = useState("");
   const [edited, setEdited] = useState(false);
+  const [isDiff, setIsDiff] = useState(false);
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
     localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -163,9 +165,16 @@ function App() {
                   isEditing={true}
                   url={url}
                   setUrl={setUrl}
+                  data={data}
+                  setData={setData}
+                  oldData={oldData}
+                  setOldData={setOldData}
                   invokeSave={invokeSave}
                   contentbuid={contentbuid}
                   setContentBuid={setContentBuid}
+                  edited={edited}
+                  setEdited={setEdited}
+                  setReadOnly={setReadOnly}
                 />
               </MediaQuery>
               <MediaQuery minWidth={480}>
@@ -178,6 +187,10 @@ function App() {
                   isEditing={true}
                   url={url}
                   setUrl={setUrl}
+                  data={data}
+                  setData={setData}
+                  oldData={oldData}
+                  setOldData={setOldData}
                   invokeSave={invokeSave}
                   language={language}
                   setLanguage={setLanguage}
@@ -186,6 +199,11 @@ function App() {
                   ReactGA={ReactGA}
                   contentbuid={contentbuid}
                   setContentBuid={setContentBuid}
+                  edited={edited}
+                  isDiff={isDiff}
+                  setEdited={setEdited}
+                  setReadOnly={setReadOnly}
+                  setIsDiff={setIsDiff}
                 />
               </MediaQuery>
             </div>
@@ -200,11 +218,14 @@ function App() {
                     setUrl={setUrl}
                     data={data}
                     setData={setData}
+                    oldData={oldData}
+                    setOldData={setOldData}
                     invokeSave={invokeSave}
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
+                    edited={edited}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -216,11 +237,15 @@ function App() {
                     setUrl={setUrl}
                     data={data}
                     setData={setData}
+                    oldData={oldData}
+                    setOldData={setOldData}
                     invokeSave={invokeSave}
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
+                    edited={edited}
+                    isDiff={isDiff}
                   />
                 </MediaQuery>
               </Route>
@@ -234,10 +259,13 @@ function App() {
                     setUrl={setUrl}
                     data={data}
                     setData={setData}
+                    oldData={oldData}
+                    setOldData={setOldData}
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
+                    edited={edited}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -249,10 +277,14 @@ function App() {
                     setUrl={setUrl}
                     data={data}
                     setData={setData}
+                    oldData={oldData}
+                    setOldData={setOldData}
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
+                    edited={edited}
+                    isDiff={isDiff}
                   />
                 </MediaQuery>
               </Route>

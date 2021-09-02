@@ -31,28 +31,34 @@ export default function MEditor(props) {
   const language = props.language;
   const setReadOnly = props.setReadOnly;
   const setUrl = props.setUrl;
-  const isDiff = false;
+  const isDiff = props.isDiff;
   const isMarkdownView = props.isMarkdownView;
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
   const setContentBuid = props.setContentBuid;
-
+  const oldData = props.oldData;
+  const edited = props.edited;
   // const [loading, setLoading] = useState(false);
   const { id } = useParams();
-  if (id) {
-    setReadOnly(true);
-    setUrl(id);
-    getData(setData, id, base_url, setContentBuid);
+  function set_data_if_exists() {
+    if (id) {
+      // console.log(readOnly, edited);
+      if (!(!readOnly && edited)) setReadOnly(true);
+      setUrl(id);
+      if (!edited) getData(setData, id, base_url, setContentBuid);
+    }
   }
+  set_data_if_exists();
   // if (data) {
   //   document.getElementById("m-placeholder").style.display = "none";
   // }
+  console.log(oldData);
   const diffEditor = (
     <DiffEditor
       height="90vh"
       defaultLanguage={language}
-      original=""
-      modified={id}
+      original={oldData}
+      modified={data}
     />
   );
 
