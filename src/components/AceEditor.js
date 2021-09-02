@@ -46,6 +46,7 @@ export default function PEditor(props) {
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
   const setContentBuid = props.setContentBuid;
+  const edited = props.edited;
 
   // const [loading, setLoading] = useState(false);
 
@@ -59,9 +60,9 @@ export default function PEditor(props) {
           updateIsMarkdownView(true);
         }
       }
-      setReadOnly(true);
+      if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      getData(setData, id, base_url, setContentBuid);
+      if (!edited) getData(setData, id, base_url, setContentBuid);
     }
   }
   set_data_if_exists();
