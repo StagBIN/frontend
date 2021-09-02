@@ -51,7 +51,7 @@ export default function PEditor(props) {
     <div
       style={{
         overflow: "hidden",
-        paddingBottom: "30px",
+        // paddingBottom: "30px",
       }}
     >
       <AceEditor

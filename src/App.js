@@ -20,6 +20,10 @@ import axios from "axios";
 
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 
+// For Analytics
+import ReactGA from "react-ga";
+import React from "react";
+
 function CustomAlert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -69,7 +73,10 @@ const post_save = async (
 function App() {
   let localTheme = localStorage.getItem("stagbin_theme");
   const base_url = window.location.origin;
-
+  if (base_url == "http://stagbin.tk") {
+    const TRACKING_ID = "G-C849VKZTYX"; // YOUR_OWN_TRACKING_ID
+    ReactGA.initialize(TRACKING_ID);
+  }
   const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
   const [language, setLanguage] = useState("python");
@@ -77,6 +84,7 @@ function App() {
   const [data, setData] = useState("");
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
+  const [isMarkdownView, updateIsMarkdownView] = useState(false);
 
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
@@ -141,7 +149,11 @@ function App() {
                   url={url}
                   setUrl={setUrl}
                   invokeSave={invokeSave}
+                  language={language}
                   setLanguage={setLanguage}
+                  updateIsMarkdownView={updateIsMarkdownView}
+                  isMarkdownView={isMarkdownView}
+                  ReactGA={ReactGa}
                 />
               </MediaQuery>
             </div>
@@ -159,6 +171,7 @@ function App() {
                     invokeSave={invokeSave}
                     language={language}
                     base_url={base_url}
+                    isMarkdownView={isMarkdownView}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -173,6 +186,7 @@ function App() {
                     invokeSave={invokeSave}
                     language={language}
                     base_url={base_url}
+                    isMarkdownView={isMarkdownView}
                   />
                 </MediaQuery>
               </Route>
@@ -188,6 +202,7 @@ function App() {
                     setData={setData}
                     language={language}
                     base_url={base_url}
+                    isMarkdownView={isMarkdownView}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -201,6 +216,7 @@ function App() {
                     setData={setData}
                     language={language}
                     base_url={base_url}
+                    isMarkdownView={isMarkdownView}
                   />
                 </MediaQuery>
               </Route>
