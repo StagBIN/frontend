@@ -28,6 +28,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
+import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,7 +106,10 @@ export default function BackToTop(props) {
   const base_url = props.base_url;
   // const setContentBuid = props.setContentBuid;
 
-  // const setReadOnly = props.setReadOnly;
+  const setReadOnly = props.setReadOnly;
+  const [isDiff, setIsDiff] = [props.isDiff, props.setIsDiff];
+  const [edited, setEdited] = [props.edited, props.setEdited];
+  const [data, setOldData] = [props.data, props.setOldData];
 
   return (
     <React.Fragment>
@@ -120,7 +124,7 @@ export default function BackToTop(props) {
             <Input
               id="custom-url"
               type="text"
-              disabled={readOnly ? true : false}
+              disabled={readOnly || edited ? true : false}
               value={url}
               onChange={(e) => {
                 // console.log(e.target.value);
@@ -191,10 +195,37 @@ export default function BackToTop(props) {
             ) : (
               ""
             )}
+            {edited ? (
+              <Tooltip title="View Differences">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Difference"
+                  onClick={() => {
+                    setIsDiff(!isDiff);
+                  }}
+                >
+                  <VSCodeDiffIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
             {readOnly ? (
               contentbuid === localStorage.getItem("stagbin_system_id") ? (
                 <Tooltip title="Edit">
-                  <IconButton edge="end" color="inherit" aria-label="Save">
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    aria-label="Save"
+                    onClick={() => {
+                      console.log(data);
+                      setOldData((" " + data).slice(1));
+                      setEdited(true);
+                      setReadOnly(false);
+                      console.log(readOnly);
+                    }}
+                  >
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
@@ -213,6 +244,7 @@ export default function BackToTop(props) {
                 </IconButton>
               </Tooltip>
             )}
+
             <Tooltip title="New Paste">
               <IconButton
                 edge="end"
