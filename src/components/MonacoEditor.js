@@ -59,6 +59,7 @@ export default function MEditor(props) {
       defaultLanguage={language}
       original={oldData}
       modified={data}
+      theme={curTheme === "light" ? "light" : "vs-dark"}
     />
   );
 
