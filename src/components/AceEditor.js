@@ -1,4 +1,5 @@
 import AceEditor from "react-ace";
+import MDEditor from "@uiw/react-md-editor";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -37,6 +38,10 @@ export default function PEditor(props) {
   const readOnly = props.readOnly;
   //   const language = props.language;
   const setReadOnly = props.setReadOnly;
+  const [isMarkdownView, updateIsMarkdownView] = [
+    props.isMarkdownView,
+    props.updateIsMarkdownView,
+  ];
   const setUrl = props.setUrl;
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
@@ -44,15 +49,34 @@ export default function PEditor(props) {
 
   // const [loading, setLoading] = useState(false);
 
-  const { id } = useParams();
+  let { id } = useParams();
   function set_data_if_exists() {
     if (id) {
+      if (id.indexOf(".") !== -1) {
+        let ext = id.split(".").at(-1);
+        id = id.split(".")[0];
+        if (ext === "md" || ext === "markdown") {
+          updateIsMarkdownView(true);
+        }
+      }
       setReadOnly(true);
       setUrl(id);
       getData(setData, id, base_url, setContentBuid);
     }
   }
   set_data_if_exists();
+
+  const mkeditor = (
+    <div
+      className="container"
+      style={{
+        overflow: "hidden",
+        paddingBottom: "30px",
+      }}
+    >
+      <MDEditor.Markdown source={data} />
+    </div>
+  );
 
   const editor = (
     <div
@@ -76,5 +100,5 @@ export default function PEditor(props) {
       />
     </div>
   );
-  return editor;
+  return isMarkdownView ? mkeditor : editor;
 }

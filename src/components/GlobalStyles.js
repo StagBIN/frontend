@@ -7,8 +7,19 @@ export const GlobalStyles = createGlobalStyle`
     font-family: Tahoma, Helvetica, Arial, Roboto, sans-serif;
     transition: all 0.1s linear;
   }
+ 
+  pre {
+    background: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+  }
 
   .wmde-markdown code[class*="language-"], .wmde-markdown pre[class*="language-"] {
+    background: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+  }
+
+  .wmde-markdown pre {
+    background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
   }
 
