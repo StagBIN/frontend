@@ -93,7 +93,7 @@ export default function BackToTop(props) {
   const [icon, setIcon] = useState(curTheme === "dark");
   const [url, setUrl] = [props.url, props.setUrl];
   const readOnly = props.readOnly;
-  console.log(readOnly);
+  // console.log(readOnly);
   const classes = useStyles();
   const invokeSave = props.invokeSave;
   const [language, setLanguage] = [props.language, props.setLanguage];
@@ -102,14 +102,11 @@ export default function BackToTop(props) {
     props.updateIsMarkdownView,
   ];
   const contentbuid = props.contentbuid;
+  const base_url = props.base_url;
   // const setContentBuid = props.setContentBuid;
 
   // const setReadOnly = props.setReadOnly;
-  console.log(
-    contentbuid,
-    localStorage.getItem("stagbin_system_id"),
-    contentbuid === localStorage.getItem("stagbin_system_id")
-  );
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -126,7 +123,7 @@ export default function BackToTop(props) {
               disabled={readOnly ? true : false}
               value={url}
               onChange={(e) => {
-                console.log(e.target.value);
+                // console.log(e.target.value);
                 setUrl(e.target.value);
               }}
               style={{ color: "inherit" }}
@@ -137,9 +134,7 @@ export default function BackToTop(props) {
                       aria-label="cop"
                       color="inherit"
                       onClick={() => {
-                        navigator.clipboard.writeText(
-                          "https://stagbin.tk/" + url
-                        );
+                        navigator.clipboard.writeText(base_url + "/" + url);
                       }}
                     >
                       <FileCopyIcon />
@@ -224,7 +219,7 @@ export default function BackToTop(props) {
                 color="inherit"
                 aria-label="Save"
                 onClick={() => {
-                  window.location.href = "https://stagbin.tk";
+                  window.location.href = base_url;
                 }}
               >
                 <AddIcon />
