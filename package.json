@@ -15,6 +15,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
     "draft-js": "^0.11.7",
+    "node-sass": "^6.0.1",
     "react": "^17.0.2",
     "react-ace": "^9.4.3",
     "react-bootstrap": "^1.6.1",
