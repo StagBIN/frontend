@@ -31,6 +31,7 @@ function CustomAlert(props) {
 const get_and_set_systemid = async () => {
   let system_id = localStorage.getItem("stagbin_system_id");
   const valid_system_id = uuidValidate(system_id);
+  console.log("Validated systemid: ", uuidValidate(system_id));
   if (!system_id || !valid_system_id) {
     system_id = uuidv4();
     localStorage.setItem("stagbin_system_id", system_id);
@@ -85,7 +86,7 @@ function App() {
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
-
+  const [contentbuid, setContentBuid] = useState("");
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
     localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -137,6 +138,8 @@ function App() {
                   url={url}
                   setUrl={setUrl}
                   invokeSave={invokeSave}
+                  contentbuid={contentbuid}
+                  setContentBuid={setContentBuid}
                 />
               </MediaQuery>
               <MediaQuery minWidth={480}>
@@ -154,6 +157,8 @@ function App() {
                   updateIsMarkdownView={updateIsMarkdownView}
                   isMarkdownView={isMarkdownView}
                   ReactGA={ReactGA}
+                  contentbuid={contentbuid}
+                  setContentBuid={setContentBuid}
                 />
               </MediaQuery>
             </div>
@@ -172,6 +177,7 @@ function App() {
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
+                    setContentBuid={setContentBuid}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -187,6 +193,7 @@ function App() {
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
+                    setContentBuid={setContentBuid}
                   />
                 </MediaQuery>
               </Route>
@@ -203,6 +210,7 @@ function App() {
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
+                    setContentBuid={setContentBuid}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -217,6 +225,7 @@ function App() {
                     language={language}
                     base_url={base_url}
                     isMarkdownView={isMarkdownView}
+                    setContentBuid={setContentBuid}
                   />
                 </MediaQuery>
               </Route>

@@ -101,9 +101,15 @@ export default function BackToTop(props) {
     props.isMarkdownView,
     props.updateIsMarkdownView,
   ];
+  const contentbuid = props.contentbuid;
+  // const setContentBuid = props.setContentBuid;
 
   // const setReadOnly = props.setReadOnly;
-
+  console.log(
+    contentbuid,
+    localStorage.getItem("stagbin_system_id"),
+    contentbuid === localStorage.getItem("stagbin_system_id")
+  );
   return (
     <React.Fragment>
       <CssBaseline />
@@ -191,11 +197,15 @@ export default function BackToTop(props) {
               ""
             )}
             {readOnly ? (
-              <Tooltip title="Edit">
-                <IconButton edge="end" color="inherit" aria-label="Save">
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
+              contentbuid === localStorage.getItem("stagbin_system_id") ? (
+                <Tooltip title="Edit">
+                  <IconButton edge="end" color="inherit" aria-label="Save">
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                ""
+              )
             ) : (
               <Tooltip title="Save">
                 <IconButton

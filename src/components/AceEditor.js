@@ -11,7 +11,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/ext-beautify";
 
 let reqData = {};
-const getData = async (setData, id, base_url) => {
+const getData = async (setData, id, base_url, setContentBuid) => {
   // setLoading(true);
   const res = await axios
     .get("https://api.stagbin.tk/dev/content/" + id)
@@ -23,6 +23,7 @@ const getData = async (setData, id, base_url) => {
   if (res.status === 200) {
     reqData = res.data[0];
     console.log(reqData);
+    setContentBuid(reqData.buid);
     setData(reqData.data);
     // setLoading(false);
   }
@@ -39,12 +40,14 @@ export default function PEditor(props) {
   const setUrl = props.setUrl;
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
+  const setContentBuid = props.setContentBuid;
+
   // const [loading, setLoading] = useState(false);
   const { id } = useParams();
   if (id) {
     setReadOnly(true);
     setUrl(id);
-    getData(setData, id, base_url);
+    getData(setData, id, base_url, setContentBuid);
   }
 
   const editor = (
