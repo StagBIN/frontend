@@ -223,6 +223,7 @@ function App() {
                     invokeSave={invokeSave}
                     language={language}
                     base_url={base_url}
+                    updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
                     edited={edited}
@@ -242,6 +243,7 @@ function App() {
                     invokeSave={invokeSave}
                     language={language}
                     base_url={base_url}
+                    updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
                     edited={edited}
@@ -263,6 +265,7 @@ function App() {
                     setOldData={setOldData}
                     language={language}
                     base_url={base_url}
+                    updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
                     edited={edited}
@@ -281,6 +284,7 @@ function App() {
                     setOldData={setOldData}
                     language={language}
                     base_url={base_url}
+                    updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
                     edited={edited}

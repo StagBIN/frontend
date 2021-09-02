@@ -32,17 +32,26 @@ export default function MEditor(props) {
   const setReadOnly = props.setReadOnly;
   const setUrl = props.setUrl;
   const isDiff = props.isDiff;
-  const isMarkdownView = props.isMarkdownView;
+  const [isMarkdownView, updateIsMarkdownView] = [
+    props.isMarkdownView,
+    props.updateIsMarkdownView,
+  ];
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
   const setContentBuid = props.setContentBuid;
   const oldData = props.oldData;
   const edited = props.edited;
   // const [loading, setLoading] = useState(false);
-  const { id } = useParams();
+  let { id } = useParams();
   function set_data_if_exists() {
     if (id) {
-      // console.log(readOnly, edited);
+      if (id.indexOf(".") !== -1) {
+        let ext = id.split(".").at(-1);
+        id = id.split(".")[0];
+        if (ext === "md" || ext === "markdown") {
+          updateIsMarkdownView(true);
+        }
+      }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
       if (!edited) getData(setData, id, base_url, setContentBuid);
