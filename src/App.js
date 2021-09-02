@@ -153,7 +153,7 @@ function App() {
                   setLanguage={setLanguage}
                   updateIsMarkdownView={updateIsMarkdownView}
                   isMarkdownView={isMarkdownView}
-                  ReactGA={ReactGa}
+                  ReactGA={ReactGA}
                 />
               </MediaQuery>
             </div>
