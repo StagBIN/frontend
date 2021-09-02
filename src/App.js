@@ -31,12 +31,32 @@ function CustomAlert(props) {
 const get_and_set_systemid = async () => {
   let system_id = localStorage.getItem("stagbin_system_id");
   const valid_system_id = uuidValidate(system_id);
-  console.log("Validated systemid: ", uuidValidate(system_id));
+  // console.log("Validated systemid: ", uuidValidate(system_id));
   if (!system_id || !valid_system_id) {
     system_id = uuidv4();
     localStorage.setItem("stagbin_system_id", system_id);
   }
   return system_id;
+};
+
+const patch_save = async (
+  data,
+  // id,
+  // buid,
+  // base_url,
+  // setSuccess,
+  setSizeWarning
+) => {
+  function byteCount(s) {
+    return encodeURI(s).split(/%..|./).length - 1;
+  }
+  const size = byteCount(data) / (1024 * 1024);
+  if (size > 0.4) {
+    setSizeWarning(true);
+    return;
+  }
+  console.log("Edited:\n", data);
+  alert("Edited successfully");
 };
 
 const post_save = async (
@@ -63,7 +83,7 @@ const post_save = async (
   if (res.status === 200) {
     navigator.clipboard.writeText(base_url + "/" + res.data.id);
     setSuccess(true);
-    console.log(base_url);
+    // console.log(base_url);
     window.location.href = base_url + "/" + res.data.id;
   } else {
     console.log(res.status);
@@ -87,6 +107,7 @@ function App() {
   const [size_warning, setSizeWarning] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
   const [contentbuid, setContentBuid] = useState("");
+  const [edited, setEdited] = useState(false);
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
     localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -109,7 +130,11 @@ function App() {
 
   const invokeSave = async () => {
     const system_id = await get_and_set_systemid();
-    post_save(data, url, system_id, base_url, setSuccess, setSizeWarning);
+    if (edited) {
+      patch_save(data, url, system_id, base_url, setSuccess, setSizeWarning);
+    } else {
+      post_save(data, url, system_id, base_url, setSuccess, setSizeWarning);
+    }
   };
 
   const handleCloseSnackBar = (event, reason) => {
@@ -132,6 +157,7 @@ function App() {
                 <MobileTopAppBar
                   toggle={themeToggler}
                   readOnlyToggle={setReadOnly}
+                  base_url={base_url}
                   readOnly={readOnly}
                   curTheme={theme}
                   isEditing={true}
@@ -147,6 +173,7 @@ function App() {
                   toggle={themeToggler}
                   readOnly={readOnly}
                   readOnlyToggle={setReadOnly}
+                  base_url={base_url}
                   curTheme={theme}
                   isEditing={true}
                   url={url}
