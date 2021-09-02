@@ -80,9 +80,11 @@ export default function BackToTop(props) {
   // const [url, setUrl] = [props.url, props.setUrl];
   const readOnly = props.readOnly;
   const invokeSave = props.invokeSave;
+  const contentbuid = props.contentbuid;
+  const base_url = props.base_url;
 
   const classes = useStyles();
-  console.log(readOnly);
+  // console.log(readOnly);
   return (
     <React.Fragment>
       <CssBaseline />
@@ -103,11 +105,15 @@ export default function BackToTop(props) {
           ></FormControl>
           <div style={{ display: "inline-flex" }}>
             {readOnly ? (
-              <Tooltip title="Edit">
-                <IconButton edge="end" color="inherit" aria-label="Save">
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
+              contentbuid === localStorage.getItem("stagbin_system_id") ? (
+                <Tooltip title="Edit">
+                  <IconButton edge="end" color="inherit" aria-label="Save">
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                ""
+              )
             ) : (
               <Tooltip title="Save">
                 <IconButton
@@ -126,7 +132,7 @@ export default function BackToTop(props) {
                 color="inherit"
                 aria-label="Save"
                 onClick={() => {
-                  window.location.href = "https://stagbin.tk";
+                  window.location.href = base_url;
                 }}
               >
                 <AddIcon />

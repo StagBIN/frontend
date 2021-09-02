@@ -12,10 +12,10 @@ const getData = async (setData, id, base_url, setContentBuid) => {
       // alert("invalid url");
       window.location.href = base_url;
     });
-  console.log(res);
+  // console.log(res);
   if (res.status === 200) {
     reqData = res.data[0];
-    console.log(reqData);
+    // console.log(reqData);
     setContentBuid(reqData.buid);
     setData(reqData.data);
     // setLoading(false);
@@ -101,6 +101,6 @@ export default function MEditor(props) {
       <MDEditor.Markdown source={data} />
     </div>
   );
-  console.log(language);
+  // console.log(language);
   return isDiff ? diffEditor : isMarkdownView ? mkeditor : editor;
 }

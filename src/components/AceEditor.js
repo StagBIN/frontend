@@ -19,10 +19,10 @@ const getData = async (setData, id, base_url, setContentBuid) => {
       // alert("invalid url");
       window.location.href = base_url;
     });
-  console.log(res);
+  // console.log(res);
   if (res.status === 200) {
     reqData = res.data[0];
-    console.log(reqData);
+    // console.log(reqData);
     setContentBuid(reqData.buid);
     setData(reqData.data);
     // setLoading(false);
@@ -43,12 +43,16 @@ export default function PEditor(props) {
   const setContentBuid = props.setContentBuid;
 
   // const [loading, setLoading] = useState(false);
+
   const { id } = useParams();
-  if (id) {
-    setReadOnly(true);
-    setUrl(id);
-    getData(setData, id, base_url, setContentBuid);
+  function set_data_if_exists() {
+    if (id) {
+      setReadOnly(true);
+      setUrl(id);
+      getData(setData, id, base_url, setContentBuid);
+    }
   }
+  set_data_if_exists();
 
   const editor = (
     <div
