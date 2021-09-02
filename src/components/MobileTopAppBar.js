@@ -83,6 +83,9 @@ export default function BackToTop(props) {
   const invokeSave = props.invokeSave;
   const contentbuid = props.contentbuid;
   const base_url = props.base_url;
+  const setReadOnly = props.setReadOnly;
+  const setEdited = props.setEdited;
+  const data = props.data;
 
   const classes = useStyles();
   // console.log(readOnly);
@@ -108,7 +111,17 @@ export default function BackToTop(props) {
             {readOnly ? (
               contentbuid === localStorage.getItem("stagbin_system_id") ? (
                 <Tooltip title="Edit">
-                  <IconButton edge="end" color="inherit" aria-label="Save">
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    aria-label="Save"
+                    onClick={() => {
+                      console.log(data);
+                      setEdited(true);
+                      setReadOnly(false);
+                      console.log(readOnly);
+                    }}
+                  >
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
