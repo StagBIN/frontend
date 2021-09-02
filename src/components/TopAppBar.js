@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(1),
     right: theme.spacing(2),
     minHeight: "10px",
+    zIndex: 99999,
   },
   centerItems: {
     justifyContent: "space-between",
@@ -114,7 +115,12 @@ export default function BackToTop(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar style={{ background: "inherit", color: "inherit" }}>
+      <AppBar
+        style={{
+          background: curTheme === "light" ? "white" : "#363537",
+          color: "inherit",
+        }}
+      >
         <Toolbar className={classes.centerItems}>
           <Typography variant="h6">StagBIN</Typography>
           <FormControl>

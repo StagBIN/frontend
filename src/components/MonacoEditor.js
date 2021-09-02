@@ -103,6 +103,7 @@ export default function MEditor(props) {
       className="container"
       style={{
         overflow: "hidden",
+        paddingBottom: "30px",
       }}
     >
       <MDEditor.Markdown source={data} />
