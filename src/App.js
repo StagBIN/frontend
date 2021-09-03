@@ -45,7 +45,8 @@ const patch_save = async (
   // buid,
   // base_url,
   // setSuccess,
-  setSizeWarning
+  setSizeWarning,
+  setDataEmptyError
 ) => {
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
@@ -53,6 +54,10 @@ const patch_save = async (
   const size = byteCount(data) / (1024 * 1024);
   if (size > 0.4) {
     setSizeWarning(true);
+    return;
+  }
+  if (data.length < 1) {
+    setDataEmptyError(true);
     return;
   }
   console.log("Edited:\n", data);
@@ -65,7 +70,8 @@ const post_save = async (
   buid,
   base_url,
   setSuccess,
-  setSizeWarning
+  setSizeWarning,
+  setDataEmptyError
 ) => {
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
@@ -75,6 +81,11 @@ const post_save = async (
     setSizeWarning(true);
     return;
   }
+  if (data.length < 1) {
+    setDataEmptyError(true);
+    return;
+  }
+
   const res = await axios.post("https://api.stagbin.tk/dev/content", {
     data,
     buid,
@@ -106,6 +117,7 @@ function App() {
   const [oldData, setOldData] = useState("");
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
+  const [data_empty_error, setDataEmptyError] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
   const [contentbuid, setContentBuid] = useState("");
   const [edited, setEdited] = useState(false);
@@ -133,9 +145,25 @@ function App() {
   const invokeSave = async () => {
     const system_id = await get_and_set_systemid();
     if (edited) {
-      patch_save(data, url, system_id, base_url, setSuccess, setSizeWarning);
+      patch_save(
+        data,
+        url,
+        system_id,
+        base_url,
+        setSuccess,
+        setSizeWarning,
+        setDataEmptyError
+      );
     } else {
-      post_save(data, url, system_id, base_url, setSuccess, setSizeWarning);
+      post_save(
+        data,
+        url,
+        system_id,
+        base_url,
+        setSuccess,
+        setSizeWarning,
+        setDataEmptyError
+      );
     }
   };
 
@@ -146,6 +174,7 @@ function App() {
 
     setSuccess(false);
     setSizeWarning(false);
+    setDataEmptyError(false);
   };
 
   return (
@@ -313,6 +342,15 @@ function App() {
           >
             <CustomAlert onClose={handleCloseSnackBar} severity="warning">
               Content cannot be more than 400kb (Increased soon)
+            </CustomAlert>
+          </Snackbar>
+          <Snackbar
+            open={data_empty_error}
+            onClose={handleCloseSnackBar}
+            autoHideDuration={6000}
+          >
+            <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              Content cannot be empty
             </CustomAlert>
           </Snackbar>
         </div>
