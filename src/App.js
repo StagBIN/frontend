@@ -41,13 +41,15 @@ const get_and_set_systemid = async () => {
 
 const patch_save = async (
   data,
-  // id,
-  // buid,
-  // base_url,
-  // setSuccess,
+  id,
+  buid,
+  base_url,
+  setSuccess,
   setSizeWarning,
   setDataEmptyError
 ) => {
+  const headers = { buid };
+
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
   }
@@ -60,8 +62,25 @@ const patch_save = async (
     setDataEmptyError(true);
     return;
   }
+
+  const res = await axios.patch(
+    "https://api.stagbin.tk/dev/content/" + id,
+    {
+      data,
+    },
+    { headers }
+  );
+  if (res.status === 200) {
+    navigator.clipboard.writeText(base_url + "/" + res.data.id);
+    setSuccess(true);
+    // console.log(base_url);
+    window.location.href = base_url + "/" + res.data.id;
+  } else {
+    console.log(res.status);
+    console.log(res.data);
+  }
+
   console.log("Edited:\n", data);
-  alert("Edited successfully");
 };
 
 const post_save = async (
@@ -119,7 +138,7 @@ function App() {
   const [size_warning, setSizeWarning] = useState(false);
   const [data_empty_error, setDataEmptyError] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
-  const [contentbuid, setContentBuid] = useState("");
+  const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
   const themeToggler = () => {
@@ -199,8 +218,8 @@ function App() {
                   oldData={oldData}
                   setOldData={setOldData}
                   invokeSave={invokeSave}
-                  contentbuid={contentbuid}
-                  setContentBuid={setContentBuid}
+                  isSameContentbuid={isSameContentbuid}
+                  setIsSameContentbuid={setIsSameContentbuid}
                   edited={edited}
                   setEdited={setEdited}
                   setReadOnly={setReadOnly}
@@ -226,8 +245,8 @@ function App() {
                   updateIsMarkdownView={updateIsMarkdownView}
                   isMarkdownView={isMarkdownView}
                   ReactGA={ReactGA}
-                  contentbuid={contentbuid}
-                  setContentBuid={setContentBuid}
+                  isSameContentbuid={isSameContentbuid}
+                  setIsSameContentbuid={setIsSameContentbuid}
                   edited={edited}
                   isDiff={isDiff}
                   setEdited={setEdited}
@@ -254,7 +273,7 @@ function App() {
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
-                    setContentBuid={setContentBuid}
+                    setIsSameContentbuid={setIsSameContentbuid}
                     edited={edited}
                   />
                 </MediaQuery>
@@ -274,7 +293,7 @@ function App() {
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
-                    setContentBuid={setContentBuid}
+                    setIsSameContentbuid={setIsSameContentbuid}
                     edited={edited}
                     isDiff={isDiff}
                   />
@@ -296,7 +315,7 @@ function App() {
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
-                    setContentBuid={setContentBuid}
+                    setIsSameContentbuid={setIsSameContentbuid}
                     edited={edited}
                   />
                 </MediaQuery>
@@ -315,7 +334,7 @@ function App() {
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
-                    setContentBuid={setContentBuid}
+                    setIsSameContentbuid={setIsSameContentbuid}
                     edited={edited}
                     isDiff={isDiff}
                   />
@@ -332,7 +351,9 @@ function App() {
             autoHideDuration={3000}
           >
             <CustomAlert onClose={handleCloseSnackBar} severity="success">
-              Paste saved successfully
+              {edited
+                ? "Paste saved successfully"
+                : "Paste edited successfully"}
             </CustomAlert>
           </Snackbar>
           <Snackbar

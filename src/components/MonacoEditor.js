@@ -4,19 +4,26 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 let reqData = {};
-const getData = async (setData, id, base_url, setContentBuid) => {
+const getData = async (setData, id, base_url, setIsSameContentbuid) => {
   // setLoading(true);
+  const headers = {
+    buid: localStorage.getItem("stagbin_system_id"),
+  };
   const res = await axios
-    .get("https://api.stagbin.tk/dev/content/" + id)
+    .get("https://api.stagbin.tk/dev/content/" + id, { headers })
     .catch((err) => {
       // alert("invalid url");
-      window.location.href = base_url;
+      // window.location.href = base_url;
+      console.log(err);
     });
-  // console.log(res);
+  console.log(res);
+  if (!res) {
+    return;
+  }
   if (res.status === 200) {
     reqData = res.data[0];
-    // console.log(reqData);
-    setContentBuid(reqData.buid);
+    console.log(reqData);
+    setIsSameContentbuid(reqData.edit);
     setData(reqData.data);
     // setLoading(false);
   }
@@ -38,7 +45,7 @@ export default function MEditor(props) {
   ];
   const [data, setData] = [props.data, props.setData];
   const base_url = props.base_url;
-  const setContentBuid = props.setContentBuid;
+  const setIsSameContentbuid = props.setIsSameContentbuid;
   const oldData = props.oldData;
   const edited = props.edited;
   // const [loading, setLoading] = useState(false);
@@ -54,7 +61,7 @@ export default function MEditor(props) {
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited) getData(setData, id, base_url, setContentBuid);
+      if (!edited) getData(setData, id, base_url, setIsSameContentbuid);
     }
   }
   set_data_if_exists();
