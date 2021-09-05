@@ -103,7 +103,7 @@ export default function BackToTop(props) {
     props.isMarkdownView,
     props.updateIsMarkdownView,
   ];
-  const contentbuid = props.contentbuid;
+  const isSameContentbuid = props.isSameContentbuid;
   const base_url = props.base_url;
   // const setContentBuid = props.setContentBuid;
 
@@ -218,7 +218,7 @@ export default function BackToTop(props) {
               ""
             )}
             {readOnly ? (
-              contentbuid === localStorage.getItem("stagbin_system_id") ? (
+              isSameContentbuid ? (
                 <Tooltip title="Edit">
                   <IconButton
                     edge="end"

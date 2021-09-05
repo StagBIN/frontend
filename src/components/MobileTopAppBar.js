@@ -81,7 +81,7 @@ export default function BackToTop(props) {
   // const [url, setUrl] = [props.url, props.setUrl];
   const readOnly = props.readOnly;
   const invokeSave = props.invokeSave;
-  const contentbuid = props.contentbuid;
+  const isSameContentbuid = props.isSameContentbuid;
   const base_url = props.base_url;
   const setReadOnly = props.setReadOnly;
   const setEdited = props.setEdited;
@@ -109,7 +109,7 @@ export default function BackToTop(props) {
           ></FormControl>
           <div style={{ display: "inline-flex" }}>
             {readOnly ? (
-              contentbuid === localStorage.getItem("stagbin_system_id") ? (
+              isSameContentbuid ? (
                 <Tooltip title="Edit">
                   <IconButton
                     edge="end"
