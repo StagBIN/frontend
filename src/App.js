@@ -124,7 +124,7 @@ const post_save = async (
 function App() {
   let localTheme = localStorage.getItem("stagbin_theme");
   const base_url = window.location.origin;
-  if (base_url === "http://stagbin.tk") {
+  if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "G-C849VKZTYX"; // YOUR_OWN_TRACKING_ID
     ReactGA.initialize(TRACKING_ID);
   }
