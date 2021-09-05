@@ -130,7 +130,7 @@ function App() {
   }
   const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
-  const [language, setLanguage] = useState("python");
+  const [language, setLanguage] = useState();
   const [url, setUrl] = useState("");
   const [data, setData] = useState("");
   const [oldData, setOldData] = useState("");
@@ -270,6 +270,7 @@ function App() {
                     setOldData={setOldData}
                     invokeSave={invokeSave}
                     language={language}
+                    setLanguage={setLanguage}
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
@@ -290,6 +291,7 @@ function App() {
                     setOldData={setOldData}
                     invokeSave={invokeSave}
                     language={language}
+                    setLanguage={setLanguage}
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
@@ -312,6 +314,7 @@ function App() {
                     oldData={oldData}
                     setOldData={setOldData}
                     language={language}
+                    setLanguage={setLanguage}
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}
@@ -331,6 +334,7 @@ function App() {
                     oldData={oldData}
                     setOldData={setOldData}
                     language={language}
+                    setLanguage={setLanguage}
                     base_url={base_url}
                     updateIsMarkdownView={updateIsMarkdownView}
                     isMarkdownView={isMarkdownView}

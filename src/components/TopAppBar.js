@@ -168,7 +168,7 @@ export default function BackToTop(props) {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 style={{ color: "inherit" }}
-                value={""}
+                value={language}
                 onChange={(event) => {
                   setLanguage(event.target.value);
                 }}
