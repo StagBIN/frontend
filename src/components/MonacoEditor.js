@@ -35,7 +35,7 @@ const getData = async (setData, id, base_url, setIsSameContentbuid) => {
 export default function MEditor(props) {
   const curTheme = props.curTheme;
   const readOnly = props.readOnly;
-  const language = props.language;
+  const [language, setLanguage] = [props.language, props.setLanguage];
   const setReadOnly = props.setReadOnly;
   const setUrl = props.setUrl;
   const isDiff = props.isDiff;
@@ -55,8 +55,37 @@ export default function MEditor(props) {
       if (id.indexOf(".") !== -1) {
         let ext = id.split(".").at(-1);
         id = id.split(".")[0];
-        if (ext === "md" || ext === "markdown") {
-          updateIsMarkdownView(true);
+        switch (ext) {
+          case "md":
+          case "markdown":
+            updateIsMarkdownView(true);
+            break;
+          case "js":
+          case "javascript":
+            setLanguage("javascript");
+            break;
+          case "c":
+          case "cpp":
+            setLanguage("cpp");
+            break;
+          case "py":
+          case "python":
+            setLanguage("python");
+            break;
+          case "html":
+            setLanguage("html");
+            break;
+          case "css":
+            setLanguage("css");
+            break;
+          case "java":
+            setLanguage("java");
+            break;
+          case "go":
+            setLanguage("go");
+            break;
+          default:
+            break;
         }
       }
       if (!(!readOnly && edited)) setReadOnly(true);
