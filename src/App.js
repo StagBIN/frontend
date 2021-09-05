@@ -356,8 +356,8 @@ function App() {
           >
             <CustomAlert onClose={handleCloseSnackBar} severity="success">
               {edited
-                ? "Paste saved successfully"
-                : "Paste edited successfully"}
+                ? "Paste edited successfully"
+                : "Paste saved successfully"}
             </CustomAlert>
           </Snackbar>
           <Snackbar
