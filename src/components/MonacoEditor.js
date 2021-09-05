@@ -13,7 +13,7 @@ const getData = async (setData, id, base_url, setIsSameContentbuid) => {
     .get("https://api.stagbin.tk/dev/content/" + id, { headers })
     .catch((err) => {
       // alert("invalid url");
-      // window.location.href = base_url;
+      window.location.href = base_url;
       console.log(err);
     });
   console.log(res);
