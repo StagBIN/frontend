@@ -69,6 +69,7 @@ const post_save = async (
   id,
   buid,
   base_url,
+  encrypted,
   setSuccess,
   setSizeWarning,
   setDataEmptyError
@@ -85,11 +86,11 @@ const post_save = async (
     setDataEmptyError(true);
     return;
   }
-
   const res = await axios.post("https://api.stagbin.tk/dev/content", {
     data,
     buid,
     id,
+    encrypted,
   });
   if (res.status === 200) {
     navigator.clipboard.writeText(base_url + "/" + res.data.id);
@@ -122,6 +123,9 @@ function App() {
   const [contentbuid, setContentBuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
+  const [encrypted, setEncrypted] = useState(false);
+  const [encryptedReadOnly, setEncryptedReadOnly] = useState(false);
+
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
     localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -160,6 +164,7 @@ function App() {
         url,
         system_id,
         base_url,
+        encrypted,
         setSuccess,
         setSizeWarning,
         setDataEmptyError
@@ -204,6 +209,10 @@ function App() {
                   edited={edited}
                   setEdited={setEdited}
                   setReadOnly={setReadOnly}
+                  encrypted={encrypted}
+                  setEncrypted={setEncrypted}
+                  encryptedReadOnly={encryptedReadOnly}
+                  setEncryptedReadOnly={setEncryptedReadOnly}
                 />
               </MediaQuery>
               <MediaQuery minWidth={480}>
@@ -233,6 +242,10 @@ function App() {
                   setEdited={setEdited}
                   setReadOnly={setReadOnly}
                   setIsDiff={setIsDiff}
+                  encrypted={encrypted}
+                  setEncrypted={setEncrypted}
+                  encryptedReadOnly={encryptedReadOnly}
+                  setEncryptedReadOnly={setEncryptedReadOnly}
                 />
               </MediaQuery>
             </div>
@@ -256,6 +269,8 @@ function App() {
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
                     edited={edited}
+                    encryptedReadOnly={encryptedReadOnly}
+                    setEncryptedReadOnly={setEncryptedReadOnly}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -277,6 +292,8 @@ function App() {
                     setContentBuid={setContentBuid}
                     edited={edited}
                     isDiff={isDiff}
+                    encryptedReadOnly={encryptedReadOnly}
+                    setEncryptedReadOnly={setEncryptedReadOnly}
                   />
                 </MediaQuery>
               </Route>
@@ -298,6 +315,8 @@ function App() {
                     isMarkdownView={isMarkdownView}
                     setContentBuid={setContentBuid}
                     edited={edited}
+                    encryptedReadOnly={encryptedReadOnly}
+                    setEncryptedReadOnly={setEncryptedReadOnly}
                   />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
@@ -318,6 +337,8 @@ function App() {
                     setContentBuid={setContentBuid}
                     edited={edited}
                     isDiff={isDiff}
+                    encryptedReadOnly={encryptedReadOnly}
+                    setEncryptedReadOnly={setEncryptedReadOnly}
                   />
                 </MediaQuery>
               </Route>

@@ -17,6 +17,8 @@ import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
+import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -29,6 +31,10 @@ import Select from "@material-ui/core/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
 import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
+
+// For Encryption
+import StringCrypto from "string-crypto";
+import PasswordDialog from "./PasswordDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,6 +99,13 @@ export default function BackToTop(props) {
   // const isEditing = props.isEditing;
   // 0 = white, 1 = dark
   const [icon, setIcon] = useState(curTheme === "dark");
+  const [password, setPassword] = useState("");
+  const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
+  const [encrypted, setEncrypted] = [props.encrypted, props.setEncrypted];
+  const [encryptedReadOnly, setEncryptedReadOnly] = [
+    props.encryptedReadOnly,
+    props.setEncryptedReadOnly,
+  ];
   const [url, setUrl] = [props.url, props.setUrl];
   const readOnly = props.readOnly;
   // console.log(readOnly);
@@ -110,7 +123,30 @@ export default function BackToTop(props) {
   const setReadOnly = props.setReadOnly;
   const [isDiff, setIsDiff] = [props.isDiff, props.setIsDiff];
   const [edited, setEdited] = [props.edited, props.setEdited];
-  const [data, setOldData] = [props.data, props.setOldData];
+  const [data, setData, setOldData] = [
+    props.data,
+    props.setData,
+    props.setOldData,
+  ];
+
+  // Testing Hash
+  const { encryptString, decryptString } = new StringCrypto();
+
+  const handlePassWordClose = () => {
+    setOpenPasswordDialog(false);
+    if (password.length > 0) {
+      if (true) {
+        console.log(decryptString(data, password));
+        setData(decryptString(data, password));
+        setEncryptedReadOnly(true);
+      } else {
+        setReadOnly(true);
+        setEncrypted(true);
+        setEncryptedReadOnly(true);
+        setData(encryptString(data, password));
+      }
+    }
+  };
 
   return (
     <React.Fragment>
@@ -185,6 +221,36 @@ export default function BackToTop(props) {
                 <MenuItem value="java">Java</MenuItem>
               </Select>
             </FormControl>
+            {!readOnly && !edited && !encrypted ? (
+              <Tooltip title="Encrypt">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    setOpenPasswordDialog(true);
+                  }}
+                >
+                  <LockIcon />
+                </IconButton>
+              </Tooltip>
+            ) : !encryptedReadOnly ? (
+              <Tooltip title="Decrypt">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    setOpenPasswordDialog(true);
+                  }}
+                >
+                  <LockOpenIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
+
             {readOnly || language === "markdown" ? (
               <Tooltip title={"Markdown " + (readOnly ? "View" : "Preview")}>
                 <IconButton
@@ -217,7 +283,7 @@ export default function BackToTop(props) {
             ) : (
               ""
             )}
-            {readOnly ? (
+            {readOnly && !encryptedReadOnly ? (
               contentbuid === localStorage.getItem("stagbin_system_id") ? (
                 <Tooltip title="Edit">
                   <IconButton
@@ -225,11 +291,15 @@ export default function BackToTop(props) {
                     color="inherit"
                     aria-label="Save"
                     onClick={() => {
-                      console.log(data);
-                      setOldData((" " + data).slice(1));
-                      setEdited(true);
-                      setReadOnly(false);
-                      console.log(readOnly);
+                      // console.log(data);
+                      if (encrypted) {
+                        alert("Decrypt Data first");
+                      } else {
+                        setOldData((" " + data).slice(1));
+                        setEdited(true);
+                        setReadOnly(false);
+                        // console.log(readOnly);
+                      }
                     }}
                   >
                     <EditIcon />
@@ -281,6 +351,14 @@ export default function BackToTop(props) {
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
+      <PasswordDialog
+        open={openPasswordDialog}
+        setOpen={setOpenPasswordDialog}
+        password={password}
+        setPassword={setPassword}
+        encrypted={true}
+        handleClose={handlePassWordClose}
+      />
     </React.Fragment>
   );
 }

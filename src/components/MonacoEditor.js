@@ -41,6 +41,10 @@ export default function MEditor(props) {
   const setContentBuid = props.setContentBuid;
   const oldData = props.oldData;
   const edited = props.edited;
+  const [encryptedReadOnly, setEncryptedReadOnly] = [
+    props.encryptedReadOnly,
+    props.setEncryptedReadOnly,
+  ];
   // const [loading, setLoading] = useState(false);
   let { id } = useParams();
   function set_data_if_exists() {
@@ -54,7 +58,8 @@ export default function MEditor(props) {
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited) getData(setData, id, base_url, setContentBuid);
+      if (!edited && !encryptedReadOnly)
+        getData(setData, id, base_url, setContentBuid);
     }
   }
   set_data_if_exists();
