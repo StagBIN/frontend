@@ -257,7 +257,7 @@ function App() {
               </MediaQuery>
             </div>
             <Switch>
-              <Route exact path="/">
+              <Route exact path={["/", "/:id"]}>
                 <MediaQuery maxWidth={480}>
                   <PEditor
                     curTheme={theme}
@@ -291,49 +291,6 @@ function App() {
                     oldData={oldData}
                     setOldData={setOldData}
                     invokeSave={invokeSave}
-                    language={language}
-                    setLanguage={setLanguage}
-                    base_url={base_url}
-                    updateIsMarkdownView={updateIsMarkdownView}
-                    isMarkdownView={isMarkdownView}
-                    setIsSameContentbuid={setIsSameContentbuid}
-                    edited={edited}
-                    isDiff={isDiff}
-                  />
-                </MediaQuery>
-              </Route>
-              <Route path="/:id">
-                <MediaQuery maxWidth={480}>
-                  <PEditor
-                    curTheme={theme}
-                    readOnly={readOnly}
-                    setReadOnly={setReadOnly}
-                    url={url}
-                    setUrl={setUrl}
-                    data={data}
-                    setData={setData}
-                    oldData={oldData}
-                    setOldData={setOldData}
-                    language={language}
-                    setLanguage={setLanguage}
-                    base_url={base_url}
-                    updateIsMarkdownView={updateIsMarkdownView}
-                    isMarkdownView={isMarkdownView}
-                    setIsSameContentbuid={setIsSameContentbuid}
-                    edited={edited}
-                  />
-                </MediaQuery>
-                <MediaQuery minWidth={480}>
-                  <MEditor
-                    curTheme={theme}
-                    readOnly={readOnly}
-                    setReadOnly={setReadOnly}
-                    url={url}
-                    setUrl={setUrl}
-                    data={data}
-                    setData={setData}
-                    oldData={oldData}
-                    setOldData={setOldData}
                     language={language}
                     setLanguage={setLanguage}
                     base_url={base_url}

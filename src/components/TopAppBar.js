@@ -13,7 +13,7 @@ import Zoom from "@material-ui/core/Zoom";
 import { Button } from "@material-ui/core";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
-import AddIcon from "@material-ui/icons/Add";
+// import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
@@ -122,7 +122,12 @@ export default function BackToTop(props) {
         }}
       >
         <Toolbar className={classes.centerItems}>
-          <Typography variant="h6">StagBIN</Typography>
+          <a
+            href="base_url"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <Typography variant="h6">StagBIN</Typography>
+          </a>
           <FormControl>
             <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
               URL
@@ -251,7 +256,7 @@ export default function BackToTop(props) {
               </Tooltip>
             )}
 
-            <Tooltip title="New Paste">
+            {/* <Tooltip title="New Paste">
               <IconButton
                 edge="end"
                 color="inherit"
@@ -262,7 +267,7 @@ export default function BackToTop(props) {
               >
                 <AddIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Button
               color="inherit"
               onClick={() => {
