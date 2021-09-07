@@ -3,9 +3,20 @@ import MDEditor from "@uiw/react-md-editor";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+// Loading
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "@material-ui/core";
+import { useState } from "react";
+
 let reqData = {};
-const getData = async (setData, id, base_url, setIsSameContentbuid) => {
-  // setLoading(true);
+const getData = async (
+  setData,
+  id,
+  base_url,
+  setIsSameContentbuid,
+  setLoading
+) => {
   const headers = {
     buid: localStorage.getItem("stagbin_system_id"),
   };
@@ -25,14 +36,22 @@ const getData = async (setData, id, base_url, setIsSameContentbuid) => {
     console.log(reqData);
     setIsSameContentbuid(reqData.edit);
     setData(reqData.data);
-    // setLoading(false);
+    setLoading(false);
   }
   if (reqData.url) {
     window.location.href = reqData.data;
   }
 };
 
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
+
 export default function MEditor(props) {
+  const classes = useStyles();
   const curTheme = props.curTheme;
   const readOnly = props.readOnly;
   const [language, setLanguage] = [props.language, props.setLanguage];
@@ -48,8 +67,8 @@ export default function MEditor(props) {
   const setIsSameContentbuid = props.setIsSameContentbuid;
   const oldData = props.oldData;
   const edited = props.edited;
-  // const [loading, setLoading] = useState(false);
   let { id } = useParams();
+  const [loading, setLoading] = useState(id ? true : false);
   function set_data_if_exists() {
     if (id) {
       if (id.indexOf(".") !== -1) {
@@ -90,9 +109,12 @@ export default function MEditor(props) {
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited) getData(setData, id, base_url, setIsSameContentbuid);
+      if (!edited) {
+        getData(setData, id, base_url, setIsSameContentbuid, setLoading);
+      }
     }
   }
+
   set_data_if_exists();
   // if (data) {
   //   document.getElementById("m-placeholder").style.display = "none";
@@ -143,6 +165,12 @@ export default function MEditor(props) {
       />
     </div>
   );
+
+  const loader = (
+    <Backdrop className={classes.backdrop} open={loading}>
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  );
   const mkeditor = (
     <div
       className="container"
@@ -155,5 +183,11 @@ export default function MEditor(props) {
     </div>
   );
   // console.log(language);
-  return isDiff ? diffEditor : isMarkdownView ? mkeditor : editor;
+  return loading
+    ? loader
+    : isDiff
+    ? diffEditor
+    : isMarkdownView
+    ? mkeditor
+    : editor;
 }
