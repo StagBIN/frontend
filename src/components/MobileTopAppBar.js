@@ -161,6 +161,7 @@ export default function BackToTop(props) {
             </Tooltip> */}
             <Button
               color="inherit"
+              aria-label="theme"
               onClick={() => {
                 props.toggle();
                 setIcon(!icon);

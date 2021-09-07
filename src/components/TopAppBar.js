@@ -174,6 +174,7 @@ export default function BackToTop(props) {
                 id="demo-simple-select"
                 style={{ color: "inherit" }}
                 value={language}
+                aria-label="Select Language"
                 onChange={(event) => {
                   setLanguage(event.target.value);
                 }}
@@ -195,7 +196,7 @@ export default function BackToTop(props) {
                 <IconButton
                   edge="end"
                   color="inherit"
-                  aria-label="Save"
+                  aria-label="Markdown Preview"
                   onClick={() => {
                     updateIsMarkdownView(!isMarkdownView);
                   }}
@@ -228,7 +229,7 @@ export default function BackToTop(props) {
                   <IconButton
                     edge="end"
                     color="inherit"
-                    aria-label="Save"
+                    aria-label="Edit"
                     onClick={() => {
                       console.log(data);
                       setOldData((" " + data).slice(1));
@@ -256,20 +257,9 @@ export default function BackToTop(props) {
               </Tooltip>
             )}
 
-            {/* <Tooltip title="New Paste">
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="Save"
-                onClick={() => {
-                  window.location.href = base_url;
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip> */}
             <Button
               color="inherit"
+              aria-label="change theme"
               onClick={() => {
                 props.toggle();
                 setIcon(!icon);

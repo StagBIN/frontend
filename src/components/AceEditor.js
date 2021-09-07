@@ -121,6 +121,7 @@ export default function PEditor(props) {
         height="85vh"
         width="100%"
         readOnly={readOnly}
+        aria-label="input field"
       />
     </div>
   );
