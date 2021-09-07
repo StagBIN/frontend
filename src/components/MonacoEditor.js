@@ -166,11 +166,6 @@ export default function MEditor(props) {
     </div>
   );
 
-  const loader = (
-    <Backdrop className={classes.backdrop} open={loading}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  );
   const mkeditor = (
     <div
       className="container"
@@ -183,11 +178,12 @@ export default function MEditor(props) {
     </div>
   );
   // console.log(language);
-  return loading
-    ? loader
-    : isDiff
-    ? diffEditor
-    : isMarkdownView
-    ? mkeditor
-    : editor;
+  return (
+    <div>
+      {isDiff ? diffEditor : isMarkdownView ? mkeditor : editor}
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
+  );
 }
