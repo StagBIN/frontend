@@ -147,7 +147,7 @@ export default function BackToTop(props) {
                 </IconButton>
               </Tooltip>
             )}
-            {/* <Tooltip title="New Paste">
+            <Tooltip title="New Paste">
               <IconButton
                 edge="end"
                 color="inherit"
@@ -158,7 +158,7 @@ export default function BackToTop(props) {
               >
                 <AddIcon />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
             <Button
               color="inherit"
               aria-label="theme"

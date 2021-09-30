@@ -106,6 +106,8 @@ export default function MEditor(props) {
           default:
             break;
         }
+      } else {
+        setLanguage("javascript");
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
