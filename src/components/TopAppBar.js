@@ -13,7 +13,7 @@ import Zoom from "@material-ui/core/Zoom";
 import { Button } from "@material-ui/core";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
-// import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
