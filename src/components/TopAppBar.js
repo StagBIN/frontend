@@ -256,7 +256,18 @@ export default function BackToTop(props) {
                 </IconButton>
               </Tooltip>
             )}
-
+            <Tooltip title="New Paste">
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="New Paste"
+                onClick={() => {
+                  window.location.href = base_url;
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
             <Button
               color="inherit"
               aria-label="change theme"
