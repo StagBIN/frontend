@@ -144,13 +144,19 @@ export default function MEditor(props) {
           top: "65px",
           left: "64px",
           zIndex: 2,
+          fontSize: "medium",
           display: data ? "none" : "block",
           pointerEvents: "none",
           opacity: 0.5,
         }}
       >
-        Enter text and press ctrl + s to save, this also acts as a url shortner
-        if you paste a http(s) url instead
+         * Paste & Share content :) (P.S. We also work as a URL Shortner if you paste just a URL!)<br></br>
+         <br></br>
+         Tips & Tricks:<br></br>
+         > Use CTRL+S to Save<br></br>
+         > Use the URL field above for personalizing your paste<br></br>
+         > We also support Markdown so feel free to show your skills :P<br></br>
+        
       </text>
       <Editor
         theme={curTheme === "light" ? "light" : "vs-dark"}

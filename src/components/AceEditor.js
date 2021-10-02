@@ -110,8 +110,8 @@ export default function PEditor(props) {
       }}
     >
       <AceEditor
-        placeholder="Enter text and press ctrl + s to save, this also acts as a url shortner
-        if you paste a http(s) url instead"
+        placeholder="Paste & Share content :)"
+        fontSize="100"
         mode="javascript"
         value={data}
         theme={curTheme === "light" ? "github" : "twilight"}
