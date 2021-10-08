@@ -3,7 +3,6 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { useState } from "react";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
@@ -23,6 +22,9 @@ import FormControl from "@material-ui/core/FormControl";
 import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 // import Input from "@material-ui/core/Input";
+
+// Logo
+import logo from "../assets/images/logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,14 +102,12 @@ export default function BackToTop(props) {
         }}
       >
         <Toolbar className={classes.centerItems}>
-          <Typography
-            onClick={() => {
-              window.location.href = base_url;
-            }}
-            variant="h6"
+          <a
+            href="base_url"
+            style={{ color: "inherit", textDecoration: "none" }}
           >
-            StagBIN
-          </Typography>
+            <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
+          </a>
           <FormControl
             style={{
               marginLeft: "30px",

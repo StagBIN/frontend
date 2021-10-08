@@ -3,7 +3,6 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { useState } from "react";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
@@ -29,6 +28,9 @@ import Select from "@material-ui/core/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
 import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
+
+// Logo
+import logo from "../assets/images/logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,7 +128,8 @@ export default function BackToTop(props) {
             href="base_url"
             style={{ color: "inherit", textDecoration: "none" }}
           >
-            <Typography variant="h6">StagBIN</Typography>
+            <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
+            {/* <Typography variant="h6">StagBIN</Typography> */}
           </a>
           <FormControl>
             <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
