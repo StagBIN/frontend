@@ -3,9 +3,20 @@ import MDEditor from "@uiw/react-md-editor";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+// Loading
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "@material-ui/core";
+import { useState } from "react";
+
 let reqData = {};
-const getData = async (setData, id, base_url, setIsSameContentbuid) => {
-  // setLoading(true);
+const getData = async (
+  setData,
+  id,
+  base_url,
+  setIsSameContentbuid,
+  setLoading
+) => {
   const headers = {
     buid: localStorage.getItem("stagbin_system_id"),
   };
@@ -25,14 +36,22 @@ const getData = async (setData, id, base_url, setIsSameContentbuid) => {
     console.log(reqData);
     setIsSameContentbuid(reqData.edit);
     setData(reqData.data);
-    // setLoading(false);
+    setLoading(false);
   }
   if (reqData.url) {
     window.location.href = reqData.data;
   }
 };
 
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
+
 export default function MEditor(props) {
+  const classes = useStyles();
   const curTheme = props.curTheme;
   const readOnly = props.readOnly;
   const [language, setLanguage] = [props.language, props.setLanguage];
@@ -48,8 +67,8 @@ export default function MEditor(props) {
   const setIsSameContentbuid = props.setIsSameContentbuid;
   const oldData = props.oldData;
   const edited = props.edited;
-  // const [loading, setLoading] = useState(false);
   let { id } = useParams();
+  const [loading, setLoading] = useState(id ? true : false);
   function set_data_if_exists() {
     if (id) {
       if (id.indexOf(".") !== -1) {
@@ -87,12 +106,17 @@ export default function MEditor(props) {
           default:
             break;
         }
+      } else {
+        setLanguage("javascript");
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited) getData(setData, id, base_url, setIsSameContentbuid);
+      if (!edited) {
+        getData(setData, id, base_url, setIsSameContentbuid, setLoading);
+      }
     }
   }
+
   set_data_if_exists();
   // if (data) {
   //   document.getElementById("m-placeholder").style.display = "none";
@@ -120,13 +144,19 @@ export default function MEditor(props) {
           top: "65px",
           left: "64px",
           zIndex: 2,
+          fontSize: "medium",
           display: data ? "none" : "block",
           pointerEvents: "none",
           opacity: 0.5,
         }}
       >
-        Enter text and press ctrl + s to save, this also acts as a url shortner
-        if you paste a http(s) url instead
+         * Paste & Share content :) (P.S. We also work as a URL Shortner if you paste just a URL!)<br></br>
+         <br></br>
+         Tips & Tricks:<br></br>
+         > Use CTRL+S to Save<br></br>
+         > Use the URL field above for personalizing your paste<br></br>
+         > We also support Markdown so feel free to show your skills :P<br></br>
+        
       </text>
       <Editor
         theme={curTheme === "light" ? "light" : "vs-dark"}
@@ -143,6 +173,7 @@ export default function MEditor(props) {
       />
     </div>
   );
+
   const mkeditor = (
     <div
       className="container"
@@ -155,5 +186,12 @@ export default function MEditor(props) {
     </div>
   );
   // console.log(language);
-  return isDiff ? diffEditor : isMarkdownView ? mkeditor : editor;
+  return (
+    <div>
+      {isDiff ? diffEditor : isMarkdownView ? mkeditor : editor}
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
+  );
 }

@@ -3,7 +3,6 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { useState } from "react";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
@@ -29,6 +28,9 @@ import Select from "@material-ui/core/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
 import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
+
+// Logo
+import logo from "../assets/images/logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,7 +124,13 @@ export default function BackToTop(props) {
         }}
       >
         <Toolbar className={classes.centerItems}>
-          <Typography variant="h6">StagBIN</Typography>
+          <a
+            href="base_url"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
+            {/* <Typography variant="h6">StagBIN</Typography> */}
+          </a>
           <FormControl>
             <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
               URL
@@ -169,6 +177,7 @@ export default function BackToTop(props) {
                 id="demo-simple-select"
                 style={{ color: "inherit" }}
                 value={language}
+                aria-label="Select Language"
                 onChange={(event) => {
                   setLanguage(event.target.value);
                 }}
@@ -190,7 +199,7 @@ export default function BackToTop(props) {
                 <IconButton
                   edge="end"
                   color="inherit"
-                  aria-label="Save"
+                  aria-label="Markdown Preview"
                   onClick={() => {
                     updateIsMarkdownView(!isMarkdownView);
                   }}
@@ -223,7 +232,7 @@ export default function BackToTop(props) {
                   <IconButton
                     edge="end"
                     color="inherit"
-                    aria-label="Save"
+                    aria-label="Edit"
                     onClick={() => {
                       console.log(data);
                       setOldData((" " + data).slice(1));
@@ -250,12 +259,11 @@ export default function BackToTop(props) {
                 </IconButton>
               </Tooltip>
             )}
-
             <Tooltip title="New Paste">
               <IconButton
                 edge="end"
                 color="inherit"
-                aria-label="Save"
+                aria-label="New Paste"
                 onClick={() => {
                   window.location.href = base_url;
                 }}
@@ -265,6 +273,7 @@ export default function BackToTop(props) {
             </Tooltip>
             <Button
               color="inherit"
+              aria-label="change theme"
               onClick={() => {
                 props.toggle();
                 setIcon(!icon);

@@ -10,9 +10,21 @@ import "ace-builds/src-noconflict/theme-twilight";
 // this is an optional import just improved the interaction.
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/ext-beautify";
+import { useState } from "react";
+
+// Loading
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "@material-ui/core";
 
 let reqData = {};
-const getData = async (setData, id, base_url, setIsSameContentbuid) => {
+const getData = async (
+  setData,
+  id,
+  base_url,
+  setIsSameContentbuid,
+  setLoading
+) => {
   // setLoading(true);
   const headers = {
     buid: localStorage.getItem("stagbin_system_id"),
@@ -29,14 +41,22 @@ const getData = async (setData, id, base_url, setIsSameContentbuid) => {
     // console.log(reqData);
     setIsSameContentbuid(reqData.edit);
     setData(reqData.data);
-    // setLoading(false);
+    setLoading(false);
   }
   if (reqData.url) {
     window.location.href = reqData.data;
   }
 };
 
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
+
 export default function PEditor(props) {
+  const classes = useStyles();
   const curTheme = props.curTheme;
   const readOnly = props.readOnly;
   //   const language = props.language;
@@ -51,9 +71,8 @@ export default function PEditor(props) {
   const setIsSameContentbuid = props.setIsSameContentbuid;
   const edited = props.edited;
 
-  // const [loading, setLoading] = useState(false);
-
   let { id } = useParams();
+  const [loading, setLoading] = useState(id ? true : false);
   function set_data_if_exists() {
     if (id) {
       if (id.indexOf(".") !== -1) {
@@ -65,7 +84,8 @@ export default function PEditor(props) {
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited) getData(setData, id, base_url, setIsSameContentbuid);
+      if (!edited)
+        getData(setData, id, base_url, setIsSameContentbuid, setLoading);
     }
   }
   set_data_if_exists();
@@ -90,8 +110,8 @@ export default function PEditor(props) {
       }}
     >
       <AceEditor
-        placeholder="Enter text and press ctrl + s to save, this also acts as a url shortner
-        if you paste a http(s) url instead"
+        placeholder="Paste & Share content :)"
+        fontSize="100"
         mode="javascript"
         value={data}
         theme={curTheme === "light" ? "github" : "twilight"}
@@ -101,8 +121,16 @@ export default function PEditor(props) {
         height="85vh"
         width="100%"
         readOnly={readOnly}
+        aria-label="input field"
       />
     </div>
   );
-  return isMarkdownView ? mkeditor : editor;
+  return (
+    <div>
+      {isMarkdownView ? mkeditor : editor}{" "}
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
+  );
 }
