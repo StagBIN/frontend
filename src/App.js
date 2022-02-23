@@ -13,7 +13,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 // For Theme
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/GlobalStyles";
-import { lightTheme, darkTheme } from "./components/Themes";
+import { darkTheme } from "./components/Themes";
 
 import MediaQuery from "react-responsive";
 import axios from "axios";
@@ -122,14 +122,14 @@ const post_save = async (
 };
 
 function App() {
-  let localTheme = localStorage.getItem("stagbin_theme");
+  let theme = "dark";
   const base_url = window.location.origin;
   if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
     ReactGA.initialize(TRACKING_ID);
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
-  const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
+  // const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
   const [language, setLanguage] = useState();
   const [url, setUrl] = useState("");
@@ -142,10 +142,10 @@ function App() {
   const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
-  const themeToggler = () => {
-    theme === "light" ? setTheme("dark") : setTheme("light");
-    localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
-  };
+  // const themeToggler = () => {
+  //   theme === "light" ? setTheme("dark") : setTheme("light");
+  //   localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
+  // };
 
   const handleKeyDown = async (event) => {
     let charCode = String.fromCharCode(event.which).toLowerCase();
@@ -198,7 +198,7 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+    <ThemeProvider theme={darkTheme}>
       <>
         <GlobalStyles />
         <div onKeyDown={handleKeyDown} className="App" style={{}}>
@@ -206,7 +206,6 @@ function App() {
             <div>
               <MediaQuery maxWidth={480}>
                 <MobileTopAppBar
-                  toggle={themeToggler}
                   readOnlyToggle={setReadOnly}
                   base_url={base_url}
                   readOnly={readOnly}
@@ -228,7 +227,6 @@ function App() {
               </MediaQuery>
               <MediaQuery minWidth={480}>
                 <TopAppBar
-                  toggle={themeToggler}
                   readOnly={readOnly}
                   readOnlyToggle={setReadOnly}
                   base_url={base_url}

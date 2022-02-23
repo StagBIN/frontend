@@ -2,16 +2,12 @@ import React from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Fab from "@material-ui/core/Fab";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Zoom from "@material-ui/core/Zoom";
-import { Button } from "@material-ui/core";
-import NightsStayIcon from "@material-ui/icons/NightsStay";
-import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
@@ -93,8 +89,6 @@ function ScrollTop(props) {
 export default function BackToTop(props) {
   const curTheme = props.curTheme;
   // const isEditing = props.isEditing;
-  // 0 = white, 1 = dark
-  const [icon, setIcon] = useState(curTheme === "dark");
   const [url, setUrl] = [props.url, props.setUrl];
   const readOnly = props.readOnly;
   // console.log(readOnly);
@@ -271,16 +265,6 @@ export default function BackToTop(props) {
                 <AddIcon />
               </IconButton>
             </Tooltip>
-            <Button
-              color="inherit"
-              aria-label="change theme"
-              onClick={() => {
-                props.toggle();
-                setIcon(!icon);
-              }}
-            >
-              {icon ? <WbSunnyIcon /> : <NightsStayIcon />}
-            </Button>
           </div>
         </Toolbar>
       </AppBar>

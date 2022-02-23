@@ -150,13 +150,12 @@ export default function MEditor(props) {
           opacity: 0.5,
         }}
       >
-         * Paste & Share content :) (P.S. We also work as a URL Shortner if you paste just a URL!)<br></br>
-         <br></br>
-         Tips & Tricks:<br></br>
-         > Use CTRL+S to Save<br></br>
-         > Use the URL field above for personalizing your paste<br></br>
-         > We also support Markdown so feel free to show your skills :P<br></br>
-        
+        * Paste & Share content :) (P.S. We also work as a URL Shortner if you
+        paste just a URL!)<br></br>
+        <br></br>
+        Tips & Tricks:<br></br>> Use CTRL+S to Save<br></br>> Use the URL field
+        above for personalizing your paste<br></br>> We also support Markdown so
+        feel free to show your skills :P<br></br>
       </text>
       <Editor
         theme={curTheme === "light" ? "light" : "vs-dark"}
@@ -166,6 +165,7 @@ export default function MEditor(props) {
         colorDecorators="true"
         options={{
           readOnly: readOnly,
+          renderLineHighlight: "none",
         }}
         onChange={(value, event) => {
           setData(value);
