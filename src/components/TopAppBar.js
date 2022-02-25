@@ -11,6 +11,7 @@ import Zoom from "@material-ui/core/Zoom";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
+import GetAppIcon from '@material-ui/icons/GetApp';
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -188,6 +189,29 @@ export default function BackToTop(props) {
                 <MenuItem value="java">Java</MenuItem>
               </Select>
             </FormControl>
+            {readOnly ? (
+              <Tooltip title={"Download Contents"}>
+                <IconButton
+                style={{ marginTop: "5px" }}
+                  edge="end"
+                  color="inherit"
+                  aria-label="Dowmload Contents"
+                  onClick={() => {
+                    const element = document.createElement("a");
+                    element.style.display = "none";
+                    const file = new Blob([data], {type: 'text/plain'});
+                    element.href = URL.createObjectURL(file);
+                    element.download = url;
+                    document.body.appendChild(element); // Required for this to work in FireFox
+                    element.click();
+                  }}
+                >
+                  <GetAppIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
             {readOnly || language === "markdown" ? (
               <Tooltip title={"Markdown " + (readOnly ? "View" : "Preview")}>
                 <IconButton
