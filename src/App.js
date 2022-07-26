@@ -20,6 +20,8 @@ import axios from "axios";
 
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 
+import { API_URL } from "./Constants";
+
 // For Analytics
 import ReactGA from "react-ga";
 import React from "react";
@@ -64,7 +66,7 @@ const patch_save = async (
   }
 
   const res = await axios.patch(
-    "https://api.stagbin.tk/dev/content/" + id,
+    API_URL + id,
     {
       data,
     },
@@ -105,7 +107,7 @@ const post_save = async (
     return;
   }
 
-  const res = await axios.post("https://api.stagbin.tk/dev/content", {
+  const res = await axios.post(API_URL, {
     data,
     buid,
     id,
@@ -124,7 +126,7 @@ const post_save = async (
 function App() {
   let theme = "dark";
   const base_url = window.location.origin;
-  let pageDown = true;
+  let pageDown = false;
 
   if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
