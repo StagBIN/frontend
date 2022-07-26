@@ -124,10 +124,14 @@ const post_save = async (
 function App() {
   let theme = "dark";
   const base_url = window.location.origin;
+  let pageDown = true;
+
   if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
     ReactGA.initialize(TRACKING_ID);
     ReactGA.pageview(window.location.pathname + window.location.search);
+  } else if (base_url === "http://test.stagbin.tk") {
+    pageDown = false;
   }
   // const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
@@ -332,6 +336,15 @@ function App() {
           >
             <CustomAlert onClose={handleCloseSnackBar} severity="Error">
               Content cannot be empty
+            </CustomAlert>
+          </Snackbar>
+          <Snackbar
+            open={pageDown}
+            onClose={handleCloseSnackBar}
+            autoHideDuration={1000000}
+          >
+            <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              Internal Server Error, We are working on it
             </CustomAlert>
           </Snackbar>
         </div>
