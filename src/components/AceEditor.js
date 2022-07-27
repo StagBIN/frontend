@@ -17,6 +17,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core";
 
+import { API_URL } from "../Constants";
+
 let reqData = {};
 const getData = async (
   setData,
@@ -29,12 +31,10 @@ const getData = async (
   const headers = {
     buid: localStorage.getItem("stagbin_system_id"),
   };
-  const res = await axios
-    .get("https://api.stagbin.tk/dev/content/" + id, { headers })
-    .catch((err) => {
-      // alert("invalid url");
-      window.location.href = base_url;
-    });
+  const res = await axios.get(API_URL + id, { headers }).catch((err) => {
+    // alert("invalid url");
+    window.location.href = base_url;
+  });
   // console.log(res);
   if (res.status === 200) {
     reqData = res.data[0];
