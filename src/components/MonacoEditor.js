@@ -11,9 +11,11 @@ import { useState } from "react";
 
 import { API_URL } from "../Constants";
 let reqData = {};
+
 const getData = async (
   setData,
   id,
+  redirect,
   base_url,
   setIsSameContentbuid,
   setLoading
@@ -37,8 +39,8 @@ const getData = async (
     setData(reqData.data);
     setLoading(false);
   }
-  if (reqData.url) {
-    window.location.href = reqData.data;
+  if (reqData.url && !redirect) {
+    window.location = reqData.data;
   }
 };
 
@@ -67,6 +69,11 @@ export default function MEditor(props) {
   const oldData = props.oldData;
   const edited = props.edited;
   let { id } = useParams();
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let redirect = params.get("redirect");
+  console.log(redirect);
+
   const [loading, setLoading] = useState(id ? true : false);
   function set_data_if_exists() {
     if (id) {
@@ -111,7 +118,14 @@ export default function MEditor(props) {
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
       if (!edited) {
-        getData(setData, id, base_url, setIsSameContentbuid, setLoading);
+        getData(
+          setData,
+          id,
+          redirect,
+          base_url,
+          setIsSameContentbuid,
+          setLoading
+        );
       }
     }
   }
