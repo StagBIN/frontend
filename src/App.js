@@ -12,6 +12,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 
 // For Theme
 import { ThemeProvider } from "styled-components";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { darkTheme } from "./components/Themes";
 
@@ -48,7 +49,7 @@ const patch_save = async (
   base_url,
   setSuccess,
   setSizeWarning,
-  setDataEmptyError
+  setDataEmptyError,
 ) => {
   const headers = { buid };
 
@@ -70,7 +71,7 @@ const patch_save = async (
     {
       data,
     },
-    { headers }
+    { headers },
   );
   if (res.status === 200) {
     navigator.clipboard.writeText(base_url + "/" + res.data.id);
@@ -92,7 +93,7 @@ const post_save = async (
   base_url,
   setSuccess,
   setSizeWarning,
-  setDataEmptyError
+  setDataEmptyError,
 ) => {
   function byteCount(s) {
     return encodeURI(s).split(/%..|./).length - 1;
@@ -178,7 +179,7 @@ function App() {
         base_url,
         setSuccess,
         setSizeWarning,
-        setDataEmptyError
+        setDataEmptyError,
       );
     } else {
       post_save(
@@ -188,7 +189,7 @@ function App() {
         base_url,
         setSuccess,
         setSizeWarning,
-        setDataEmptyError
+        setDataEmptyError,
       );
     }
   };
