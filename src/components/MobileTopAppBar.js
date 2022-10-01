@@ -97,7 +97,7 @@ export default function BackToTop(props) {
       >
         <Toolbar className={classes.centerItems}>
           <a
-            href="base_url"
+            href={base_url}
             style={{ color: "inherit", textDecoration: "none" }}
           >
             <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
