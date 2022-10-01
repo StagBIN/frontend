@@ -42,88 +42,6 @@ const get_and_set_systemid = async () => {
   return system_id;
 };
 
-const patch_save = async (
-  data,
-  id,
-  buid,
-  base_url,
-  setSuccess,
-  setSizeWarning,
-  setDataEmptyError,
-) => {
-  const headers = { buid };
-
-  function byteCount(s) {
-    return encodeURI(s).split(/%..|./).length - 1;
-  }
-  const size = byteCount(data) / (1024 * 1024);
-  if (size > 0.4) {
-    setSizeWarning(true);
-    return;
-  }
-  if (data.length < 1) {
-    setDataEmptyError(true);
-    return;
-  }
-
-  const res = await axios.patch(
-    API_URL + id,
-    {
-      data,
-    },
-    { headers },
-  );
-  if (res.status === 200) {
-    navigator.clipboard.writeText(base_url + "/" + res.data.id);
-    setSuccess(true);
-    // console.log(base_url);
-    window.location.href = base_url + "/" + res.data.id;
-  } else {
-    console.log(res.status);
-    console.log(res.data);
-  }
-
-  console.log("Edited:\n", data);
-};
-
-const post_save = async (
-  data,
-  id,
-  buid,
-  base_url,
-  setSuccess,
-  setSizeWarning,
-  setDataEmptyError,
-) => {
-  function byteCount(s) {
-    return encodeURI(s).split(/%..|./).length - 1;
-  }
-  const size = byteCount(data) / (1024 * 1024);
-  if (size > 0.4) {
-    setSizeWarning(true);
-    return;
-  }
-  if (data.length < 1) {
-    setDataEmptyError(true);
-    return;
-  }
-
-  const res = await axios.post(API_URL, {
-    data,
-    buid,
-    id,
-  });
-  if (res.status === 200) {
-    navigator.clipboard.writeText(base_url + "/" + res.data.id);
-    setSuccess(true);
-    // console.log(base_url);
-    window.location.href = base_url + "/" + res.data.id;
-  } else {
-    console.log(res.status);
-    console.log(res.data);
-  }
-};
-
 function App() {
   let theme = "dark";
   const base_url = window.location.origin;
@@ -136,6 +54,101 @@ function App() {
   } else if (base_url === "http://test.stagbin.tk") {
     pageDown = false;
   }
+
+  const patch_save = async (
+    data,
+    id,
+    buid,
+    base_url,
+    setSuccess,
+    setSizeWarning,
+    setDataEmptyError
+  ) => {
+    const headers = { buid };
+
+    function byteCount(s) {
+      return encodeURI(s).split(/%..|./).length - 1;
+    }
+    const size = byteCount(data) / (1024 * 1024);
+    if (size > 0.4) {
+      setSizeWarning(true);
+      return;
+    }
+    if (data.length < 1) {
+      setDataEmptyError(true);
+      return;
+    }
+
+    const res = await axios.patch(
+      API_URL + id,
+      {
+        data,
+      },
+      { headers }
+    );
+    if (res.status === 200) {
+      if (navigator.userAgent.indexOf("Safari") === -1)
+        navigator.clipboard.writeText(base_url + "/" + res.data.id);
+      setSuccess(true);
+      // console.log(base_url);
+      // window.location.href = base_url + "/" + res.data.id;
+      setReadOnly(true);
+      // Set the url
+      // window.history.pushState({}, "Stagbin", base_url + "/" + res.data.id);
+      // setUrl(base_url + "/" + res.data.id);
+    } else {
+      console.log(res.status);
+      console.log(res.data);
+    }
+
+    console.log("Edited:\n", data);
+  };
+
+  const post_save = async (
+    data,
+    id,
+    buid,
+    base_url,
+    setSuccess,
+    setSizeWarning,
+    setDataEmptyError
+  ) => {
+    function byteCount(s) {
+      return encodeURI(s).split(/%..|./).length - 1;
+    }
+    const size = byteCount(data) / (1024 * 1024);
+    if (size > 0.4) {
+      setSizeWarning(true);
+      return;
+    }
+    if (data.length < 1) {
+      setDataEmptyError(true);
+      return;
+    }
+
+    const res = await axios.post(API_URL, {
+      data,
+      buid,
+      id,
+    });
+
+    if (res.status === 200) {
+      // Check if safari
+      if (navigator.userAgent.indexOf("Safari") === -1)
+        navigator.clipboard.writeText(base_url + "/" + res.data.id);
+      setSuccess(true);
+      // console.log(base_url);
+      // window.location.href = base_url + "/" + res.data.id;
+      setReadOnly(true);
+      // Set the url
+      window.history.pushState({}, "Stagbin", base_url + "/" + res.data.id);
+      setUrl(res.data.id);
+    } else {
+      console.log(res.status);
+      console.log(res.data);
+    }
+  };
+
   // const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
   const [language, setLanguage] = useState();
@@ -179,7 +192,7 @@ function App() {
         base_url,
         setSuccess,
         setSizeWarning,
-        setDataEmptyError,
+        setDataEmptyError
       );
     } else {
       post_save(
@@ -189,7 +202,7 @@ function App() {
         base_url,
         setSuccess,
         setSizeWarning,
-        setDataEmptyError,
+        setDataEmptyError
       );
     }
   };
