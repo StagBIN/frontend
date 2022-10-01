@@ -11,7 +11,7 @@ import Zoom from "@material-ui/core/Zoom";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from "@material-ui/icons/GetApp";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -109,6 +109,15 @@ export default function BackToTop(props) {
   const [edited, setEdited] = [props.edited, props.setEdited];
   const [data, setOldData] = [props.data, props.setOldData];
 
+  const showCustomUrl = true;
+  const showBinLanguages = true;
+  const showCompileLanguages = false;
+  const showNewIcon = true;
+  const showDownload = readOnly;
+  const showMarkdown = language === "markdown";
+  const showDiffIcon = edited;
+  const showEditIcon = readOnly && isSameContentbuid;
+  const showSaveIcon = !readOnly;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -126,80 +135,104 @@ export default function BackToTop(props) {
             <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
             {/* <Typography variant="h6">StagBIN</Typography> */}
           </a>
-          <FormControl>
-            <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
-              URL
-            </InputLabel>
-            <Input
-              id="custom-url"
-              type="text"
-              disabled={readOnly || edited ? true : false}
-              value={url}
-              onChange={(e) => {
-                // console.log(e.target.value);
-                setUrl(e.target.value);
-              }}
-              style={{ color: "inherit" }}
-              endAdornment={
-                readOnly ? (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="cop"
-                      color="inherit"
-                      onClick={() => {
-                        navigator.clipboard.writeText(base_url + "/" + url);
-                      }}
-                    >
-                      <FileCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ) : (
-                  ""
-                )
-              }
-            />
-          </FormControl>
-          <div>
-            <FormControl className={classes.formControl}>
-              <InputLabel
-                style={{ color: "inherit" }}
-                id="demo-simple-select-label"
-              >
-                Language
+          {showCustomUrl && (
+            <FormControl>
+              <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
+                URL
               </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                style={{ color: "inherit" }}
-                value={language}
-                aria-label="Select Language"
-                onChange={(event) => {
-                  setLanguage(event.target.value);
+              <Input
+                id="custom-url"
+                type="text"
+                disabled={readOnly || edited ? true : false}
+                value={url}
+                onChange={(e) => {
+                  // console.log(e.target.value);
+                  setUrl(e.target.value);
                 }}
-              >
-                <MenuItem value="markdown">Markdown</MenuItem>
-                <MenuItem style={{ color: "inherit" }} value="javascript">
-                  Javascript
-                </MenuItem>
-                <MenuItem value="python">Python</MenuItem>
-                <MenuItem value="go">Go Lang</MenuItem>
-                <MenuItem value="html">HTML</MenuItem>
-                <MenuItem value="css">CSS</MenuItem>
-                <MenuItem value="cpp">C/C++</MenuItem>
-                <MenuItem value="java">Java</MenuItem>
-              </Select>
+                style={{ color: "inherit" }}
+                endAdornment={
+                  readOnly && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="cop"
+                        color="inherit"
+                        onClick={() => {
+                          navigator.clipboard.writeText(base_url + "/" + url);
+                        }}
+                      >
+                        <FileCopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }
+              />
             </FormControl>
-            {readOnly ? (
+          )}
+          <div>
+            {showBinLanguages && (
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  style={{ color: "inherit" }}
+                  id="demo-simple-select-label"
+                >
+                  Language
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  style={{ color: "inherit" }}
+                  value={language}
+                  aria-label="Select Language"
+                  onChange={(event) => {
+                    setLanguage(event.target.value);
+                  }}
+                >
+                  <MenuItem value="markdown">Markdown</MenuItem>
+                  <MenuItem style={{ color: "inherit" }} value="javascript">
+                    Javascript
+                  </MenuItem>
+                  <MenuItem value="python">Python</MenuItem>
+                  <MenuItem value="go">Go Lang</MenuItem>
+                  <MenuItem value="html">HTML</MenuItem>
+                  <MenuItem value="css">CSS</MenuItem>
+                  <MenuItem value="cpp">C/C++</MenuItem>
+                  <MenuItem value="java">Java</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+            {showCompileLanguages && (
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  style={{ color: "inherit" }}
+                  id="demo-simple-select-label-compiler"
+                >
+                  Language
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label-compiler"
+                  id="demo-simple-select-compiler"
+                  style={{ color: "inherit" }}
+                  value={language}
+                  aria-label="Select Language"
+                  onChange={(event) => {
+                    setLanguage(event.target.value);
+                  }}
+                >
+                  <MenuItem value="python">Python</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+            {showDownload && (
               <Tooltip title={"Download Contents"}>
                 <IconButton
-                style={{ marginTop: "5px" }}
+                  style={{ marginTop: "5px" }}
                   edge="end"
                   color="inherit"
                   aria-label="Dowmload Contents"
                   onClick={() => {
                     const element = document.createElement("a");
                     element.style.display = "none";
-                    const file = new Blob([data], {type: 'text/plain'});
+                    const file = new Blob([data], { type: "text/plain" });
                     element.href = URL.createObjectURL(file);
                     element.download = url;
                     document.body.appendChild(element); // Required for this to work in FireFox
@@ -209,10 +242,8 @@ export default function BackToTop(props) {
                   <GetAppIcon />
                 </IconButton>
               </Tooltip>
-            ) : (
-              ""
             )}
-            {readOnly || language === "markdown" ? (
+            {showMarkdown && (
               <Tooltip title={"Markdown " + (readOnly ? "View" : "Preview")}>
                 <IconButton
                   edge="end"
@@ -225,10 +256,8 @@ export default function BackToTop(props) {
                   <MarkdownIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
-            ) : (
-              ""
             )}
-            {edited ? (
+            {showDiffIcon && (
               <Tooltip title="View Differences">
                 <IconButton
                   edge="end"
@@ -241,31 +270,26 @@ export default function BackToTop(props) {
                   <VSCodeDiffIcon />
                 </IconButton>
               </Tooltip>
-            ) : (
-              ""
             )}
-            {readOnly ? (
-              isSameContentbuid ? (
-                <Tooltip title="Edit">
-                  <IconButton
-                    edge="end"
-                    color="inherit"
-                    aria-label="Edit"
-                    onClick={() => {
-                      console.log(data);
-                      setOldData((" " + data).slice(1));
-                      setEdited(true);
-                      setReadOnly(false);
-                      console.log(readOnly);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                ""
-              )
-            ) : (
+            {showEditIcon && (
+              <Tooltip title="Edit">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Edit"
+                  onClick={() => {
+                    console.log(data);
+                    setOldData((" " + data).slice(1));
+                    setEdited(true);
+                    setReadOnly(false);
+                    console.log(readOnly);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showSaveIcon && (
               <Tooltip title="Save">
                 <IconButton
                   edge="end"
@@ -277,18 +301,20 @@ export default function BackToTop(props) {
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title="New Paste">
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="New Paste"
-                onClick={() => {
-                  window.location.href = base_url;
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
+            {showNewIcon && (
+              <Tooltip title="New Paste">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="New Paste"
+                  onClick={() => {
+                    window.location.href = base_url;
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
         </Toolbar>
       </AppBar>
