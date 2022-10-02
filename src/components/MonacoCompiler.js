@@ -19,7 +19,7 @@ export default function MCompiler() {
         overflow: "hidden",
       }}
     >
-      <text
+      <div
         style={{
           position: "absolute",
           top: "65px",
@@ -32,7 +32,7 @@ export default function MCompiler() {
         }}
       >
         * Code and compile right on your browser!!!
-      </text>
+      </div>
       <div
         sx={{
           display: "flex",

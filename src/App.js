@@ -51,6 +51,10 @@ function App() {
   const base_url = window.location.origin;
   let pageDown = false;
 
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let code = params.get("code");
+
   if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
     ReactGA.initialize(TRACKING_ID);
@@ -156,7 +160,7 @@ function App() {
 
   // const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
-  const [language, setLanguage] = useState();
+  const [language, setLanguage] = useState("python");
   const [url, setUrl] = useState("");
   const [data, setData] = useState("");
   const [oldData, setOldData] = useState("");
@@ -167,7 +171,7 @@ function App() {
   const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
-  const [compileMode, setCompileMode] = useState(false);
+  const [compileMode, setCompileMode] = useState(code ? true : false);
   const [output, setOutput] = useState("Your output here!");
 
   // const themeToggler = () => {
@@ -179,14 +183,14 @@ function App() {
     let charCode = String.fromCharCode(event.which).toLowerCase();
     if (event.ctrlKey && charCode === "s") {
       event.preventDefault();
-      invokeSave();
+      if (!compileMode) invokeSave();
     }
 
     // For Mac
     if (event.metaKey && charCode === "s") {
       event.preventDefault();
       console.log("Cmd + S pressed");
-      invokeSave();
+      if (!compileMode) invokeSave();
     }
   };
 

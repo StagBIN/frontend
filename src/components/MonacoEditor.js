@@ -78,7 +78,8 @@ export default function MEditor() {
   let search = window.location.search;
   let params = new URLSearchParams(search);
   let redirect = params.get("redirect");
-  console.log(redirect);
+
+  // console.log(redirect);
 
   const [loading, setLoading] = useState(id ? true : false);
   function set_data_if_exists() {
@@ -140,7 +141,7 @@ export default function MEditor() {
   // if (data) {
   //   document.getElementById("m-placeholder").style.display = "none";
   // }
-  console.log(oldData);
+  // console.log(oldData);
   const diffEditor = (
     <DiffEditor
       height="90vh"
@@ -157,7 +158,7 @@ export default function MEditor() {
         overflow: "hidden",
       }}
     >
-      <text
+      <div
         style={{
           position: "absolute",
           top: "65px",
@@ -175,7 +176,7 @@ export default function MEditor() {
         Tips & Tricks:<br></br> &gt; Use CTRL+S to Save<br></br> &gt; Use the
         URL field above for personalizing your paste<br></br> &gt; We also
         support Markdown so feel free to show your skills :P<br></br>
-      </text>
+      </div>
       <Editor
         theme={curTheme === "light" ? "light" : "vs-dark"}
         height="88vh"

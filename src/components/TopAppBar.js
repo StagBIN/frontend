@@ -21,7 +21,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import Input from "@material-ui/core/Input";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import Swal from "sweetalert2";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
@@ -30,6 +30,9 @@ import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 // Logo
 import logo from "../assets/images/logo.png";
+
+// Compiler
+import compiler from "../utils/compiler";
 
 // Context
 import { StagBinContext } from "../App";
@@ -186,28 +189,29 @@ export default function BackToTop(props) {
                 <IconButton
                   aria-label="run"
                   color="inherit"
-                  onClick={() => setOutput("This is your output")}
+                  onClick={async () => {
+                    // if code is empty, don't run
+                    if (data === "") {
+                      Swal.fire({
+                        icon: "warning",
+                        title: "Oops...",
+                        text: "Code is empty!",
+                        toast: true,
+                        position: "center-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                    } else {
+                      const temp_output = await compiler(data, language);
+                      setOutput(temp_output);
+                    }
+                  }}
                 >
                   <PlayArrowIcon />
                 </IconButton>
               </Tooltip>
             )}
             {showCompilerIcon && (
-              <Tooltip
-                title={compileMode ? "Disable Compile Mode" : "Compile Mode"}
-              >
-                <IconButton
-                  aria-label="compile"
-                  color={compileMode ? "inherit" : "primary"}
-                  onClick={() => {
-                    setCompileMode(!compileMode);
-                  }}
-                >
-                  <CodeIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            {showRunIcon && (
               <Tooltip
                 title={compileMode ? "Disable Compile Mode" : "Compile Mode"}
               >
