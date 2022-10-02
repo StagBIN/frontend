@@ -1,3 +1,5 @@
+import { useState, useContext } from "react";
+
 import Editor, { DiffEditor } from "@monaco-editor/react";
 import MDEditor from "@uiw/react-md-editor";
 import { useParams } from "react-router-dom";
@@ -7,9 +9,10 @@ import axios from "axios";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core";
-import { useState } from "react";
 
 import { API_URL } from "../Constants";
+import { StagBinContext } from "../App";
+
 let reqData = {};
 
 const getData = async (
@@ -51,23 +54,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MEditor(props) {
+export default function MEditor() {
+  const {
+    theme: curTheme,
+    readOnly,
+    language,
+    setLanguage,
+    setReadOnly,
+    setUrl,
+    isDiff,
+    isMarkdownView,
+    updateIsMarkdownView,
+    data,
+    setData,
+    base_url,
+    setIsSameContentbuid,
+    oldData,
+    edited,
+  } = useContext(StagBinContext);
+
   const classes = useStyles();
-  const curTheme = props.curTheme;
-  const readOnly = props.readOnly;
-  const [language, setLanguage] = [props.language, props.setLanguage];
-  const setReadOnly = props.setReadOnly;
-  const setUrl = props.setUrl;
-  const isDiff = props.isDiff;
-  const [isMarkdownView, updateIsMarkdownView] = [
-    props.isMarkdownView,
-    props.updateIsMarkdownView,
-  ];
-  const [data, setData] = [props.data, props.setData];
-  const base_url = props.base_url;
-  const setIsSameContentbuid = props.setIsSameContentbuid;
-  const oldData = props.oldData;
-  const edited = props.edited;
   let { id } = useParams();
   let search = window.location.search;
   let params = new URLSearchParams(search);
@@ -166,9 +172,9 @@ export default function MEditor(props) {
         * Paste & Share content :) (P.S. We also work as a URL Shortner if you
         paste just a URL!)<br></br>
         <br></br>
-        Tips & Tricks:<br></br>> Use CTRL+S to Save<br></br>> Use the URL field
-        above for personalizing your paste<br></br>> We also support Markdown so
-        feel free to show your skills :P<br></br>
+        Tips & Tricks:<br></br> &gt; Use CTRL+S to Save<br></br> &gt; Use the
+        URL field above for personalizing your paste<br></br> &gt; We also
+        support Markdown so feel free to show your skills :P<br></br>
       </text>
       <Editor
         theme={curTheme === "light" ? "light" : "vs-dark"}

@@ -1,10 +1,7 @@
+// React
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useState } from "react";
-import MEditor from "./components/MonacoEditor";
-import PEditor from "./components/AceEditor";
-import MobileTopAppBar from "./components/MobileTopAppBar";
-import TopAppBar from "./components/TopAppBar";
-import BottomAppBar from "./components/BottomAppBar";
+import { useState, createContext } from "react";
+import MediaQuery from "react-responsive";
 
 // For Alerts
 import Snackbar from "@material-ui/core/Snackbar";
@@ -16,16 +13,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { darkTheme } from "./components/Themes";
 
-import MediaQuery from "react-responsive";
 import axios from "axios";
-
 import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-
-import { API_URL } from "./Constants";
 
 // For Analytics
 import ReactGA from "react-ga";
 import React from "react";
+
+// Local Imports
+import MEditor from "./components/MonacoEditor";
+import PEditor from "./components/AceEditor";
+import MobileTopAppBar from "./components/MobileTopAppBar";
+import TopAppBar from "./components/TopAppBar";
+import BottomAppBar from "./components/BottomAppBar";
+import { API_URL } from "./Constants";
+
+export const StagBinContext = createContext();
 
 function CustomAlert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -140,6 +143,7 @@ function App() {
       // console.log(base_url);
       // window.location.href = base_url + "/" + res.data.id;
       setReadOnly(true);
+      setIsSameContentbuid(true);
       // Set the url
       window.history.pushState({}, "Stagbin", base_url + "/" + res.data.id);
       setUrl(res.data.id);
@@ -221,149 +225,90 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <>
         <GlobalStyles />
-        <div onKeyDown={handleKeyDown} className="App" style={{}}>
-          <Router basename={process.env.PUBLIC_URL}>
-            <div>
-              <MediaQuery maxWidth={480}>
-                <MobileTopAppBar
-                  readOnlyToggle={setReadOnly}
-                  base_url={base_url}
-                  readOnly={readOnly}
-                  curTheme={theme}
-                  isEditing={true}
-                  url={url}
-                  setUrl={setUrl}
-                  data={data}
-                  setData={setData}
-                  oldData={oldData}
-                  setOldData={setOldData}
-                  invokeSave={invokeSave}
-                  isSameContentbuid={isSameContentbuid}
-                  setIsSameContentbuid={setIsSameContentbuid}
-                  edited={edited}
-                  setEdited={setEdited}
-                  setReadOnly={setReadOnly}
-                />
-              </MediaQuery>
-              <MediaQuery minWidth={480}>
-                <TopAppBar
-                  readOnly={readOnly}
-                  readOnlyToggle={setReadOnly}
-                  base_url={base_url}
-                  curTheme={theme}
-                  isEditing={true}
-                  url={url}
-                  setUrl={setUrl}
-                  data={data}
-                  setData={setData}
-                  oldData={oldData}
-                  setOldData={setOldData}
-                  invokeSave={invokeSave}
-                  language={language}
-                  setLanguage={setLanguage}
-                  updateIsMarkdownView={updateIsMarkdownView}
-                  isMarkdownView={isMarkdownView}
-                  ReactGA={ReactGA}
-                  isSameContentbuid={isSameContentbuid}
-                  setIsSameContentbuid={setIsSameContentbuid}
-                  edited={edited}
-                  isDiff={isDiff}
-                  setEdited={setEdited}
-                  setReadOnly={setReadOnly}
-                  setIsDiff={setIsDiff}
-                />
-              </MediaQuery>
-            </div>
-            <Switch>
-              <Route exact path={["/", "/:id"]}>
+        <StagBinContext.Provider
+          value={{
+            base_url,
+            readOnly,
+            theme,
+            url,
+            setUrl,
+            data,
+            setData,
+            oldData,
+            setOldData,
+            invokeSave,
+            isSameContentbuid,
+            setIsSameContentbuid,
+            edited,
+            setIsDiff,
+            setEdited,
+            setReadOnly,
+          }}
+        >
+          <div onKeyDown={handleKeyDown} className="App" style={{}}>
+            <Router basename={process.env.PUBLIC_URL}>
+              <div>
                 <MediaQuery maxWidth={480}>
-                  <PEditor
-                    curTheme={theme}
-                    readOnly={readOnly}
-                    setReadOnly={setReadOnly}
-                    url={url}
-                    setUrl={setUrl}
-                    data={data}
-                    setData={setData}
-                    oldData={oldData}
-                    setOldData={setOldData}
-                    invokeSave={invokeSave}
-                    language={language}
-                    setLanguage={setLanguage}
-                    base_url={base_url}
-                    updateIsMarkdownView={updateIsMarkdownView}
-                    isMarkdownView={isMarkdownView}
-                    setIsSameContentbuid={setIsSameContentbuid}
-                    edited={edited}
-                  />
+                  <MobileTopAppBar />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
-                  <MEditor
-                    curTheme={theme}
-                    readOnly={readOnly}
-                    setReadOnly={setReadOnly}
-                    url={url}
-                    setUrl={setUrl}
-                    data={data}
-                    setData={setData}
-                    oldData={oldData}
-                    setOldData={setOldData}
-                    invokeSave={invokeSave}
-                    language={language}
-                    setLanguage={setLanguage}
-                    base_url={base_url}
-                    updateIsMarkdownView={updateIsMarkdownView}
-                    isMarkdownView={isMarkdownView}
-                    setIsSameContentbuid={setIsSameContentbuid}
-                    edited={edited}
-                    isDiff={isDiff}
-                  />
+                  <TopAppBar />
                 </MediaQuery>
-              </Route>
-            </Switch>
-            <div>
-              <BottomAppBar curTheme={theme} />
-            </div>
-          </Router>
-          <Snackbar
-            open={success}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={3000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="success">
-              {edited
-                ? "Paste edited successfully"
-                : "Paste saved successfully"}
-            </CustomAlert>
-          </Snackbar>
-          <Snackbar
-            open={size_warning}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={6000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="warning">
-              Content cannot be more than 400kb (Increased soon)
-            </CustomAlert>
-          </Snackbar>
-          <Snackbar
-            open={data_empty_error}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={6000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-              Content cannot be empty
-            </CustomAlert>
-          </Snackbar>
-          <Snackbar
-            open={pageDown}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={1000000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-              Internal Server Error, We are working on it
-            </CustomAlert>
-          </Snackbar>
-        </div>
+              </div>
+              <Switch>
+                <Route exact path={["/", "/:id"]}>
+                  <MediaQuery maxWidth={480}>
+                    <PEditor />
+                  </MediaQuery>
+                  <MediaQuery minWidth={480}>
+                    <MEditor />
+                  </MediaQuery>
+                </Route>
+              </Switch>
+              <div>
+                <BottomAppBar curTheme={theme} />
+              </div>
+            </Router>
+            <Snackbar
+              open={success}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={3000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="success">
+                {edited
+                  ? "Paste edited successfully"
+                  : "Paste saved successfully"}
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={size_warning}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={6000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="warning">
+                Content cannot be more than 400kb (Increased soon)
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={data_empty_error}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={6000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                Content cannot be empty
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={pageDown}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={1000000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                Internal Server Error, We are working on it
+              </CustomAlert>
+            </Snackbar>
+          </div>
+        </StagBinContext.Provider>
       </>
     </ThemeProvider>
   );

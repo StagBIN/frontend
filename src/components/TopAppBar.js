@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useContext } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -28,6 +28,9 @@ import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 // Logo
 import logo from "../assets/images/logo.png";
+
+// Context
+import { StagBinContext } from "../App";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,26 +91,28 @@ function ScrollTop(props) {
 }
 
 export default function BackToTop(props) {
-  const curTheme = props.curTheme;
-  // const isEditing = props.isEditing;
-  const [url, setUrl] = [props.url, props.setUrl];
-  const readOnly = props.readOnly;
-  // console.log(readOnly);
-  const classes = useStyles();
-  const invokeSave = props.invokeSave;
-  const [language, setLanguage] = [props.language, props.setLanguage];
-  const [isMarkdownView, updateIsMarkdownView] = [
-    props.isMarkdownView,
-    props.updateIsMarkdownView,
-  ];
-  const isSameContentbuid = props.isSameContentbuid;
-  const base_url = props.base_url;
-  // const setContentBuid = props.setContentBuid;
+  const {
+    theme: curTheme,
+    url,
+    setUrl,
+    readOnly,
+    invokeSave,
+    language,
+    setLanguage,
+    isMarkdownView,
+    updateIsMarkdownView,
+    isSameContentbuid,
+    base_url,
+    setReadOnly,
+    isDiff,
+    setIsDiff,
+    edited,
+    setEdited,
+    data,
+    setOldData,
+  } = useContext(StagBinContext);
 
-  const setReadOnly = props.setReadOnly;
-  const [isDiff, setIsDiff] = [props.isDiff, props.setIsDiff];
-  const [edited, setEdited] = [props.edited, props.setEdited];
-  const [data, setOldData] = [props.data, props.setOldData];
+  const classes = useStyles();
 
   const showCustomUrl = true;
   const showBinLanguages = true;
@@ -119,7 +124,8 @@ export default function BackToTop(props) {
   const showEditIcon = readOnly && isSameContentbuid;
   const showSaveIcon = !readOnly;
   return (
-    <React.Fragment>
+    <div>
+      {" "}
       <CssBaseline />
       <AppBar
         style={{
@@ -324,6 +330,6 @@ export default function BackToTop(props) {
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
-    </React.Fragment>
+    </div>
   );
 }
