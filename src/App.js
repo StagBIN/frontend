@@ -27,6 +27,7 @@ import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
 import BottomAppBar from "./components/BottomAppBar";
 import { API_URL } from "./Constants";
+import MCompiler from "./components/MonacoCompiler";
 
 export const StagBinContext = createContext();
 
@@ -166,6 +167,9 @@ function App() {
   const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
+  const [compileMode, setCompileMode] = useState(false);
+  const [output, setOutput] = useState("Your output here!");
+
   // const themeToggler = () => {
   //   theme === "light" ? setTheme("dark") : setTheme("light");
   //   localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -228,26 +232,30 @@ function App() {
         <StagBinContext.Provider
           value={{
             base_url,
-            readOnly,
             theme,
             url,
-            setUrl,
+            compileMode,
             data,
+            edited,
             language,
-            setData,
             oldData,
-            isMarkdownView,
+            output,
+            readOnly,
             isDiff,
-            setOldData,
-            invokeSave,
+            isMarkdownView,
             isSameContentbuid,
+            setCompileMode,
+            setData,
+            setEdited,
+            setIsDiff,
             setIsSameContentbuid,
             setLanguage,
-            updateIsMarkdownView,
-            edited,
-            setIsDiff,
-            setEdited,
+            setOldData,
+            setOutput,
             setReadOnly,
+            setUrl,
+            updateIsMarkdownView,
+            invokeSave,
           }}
         >
           <div onKeyDown={handleKeyDown} className="App" style={{}}>
@@ -266,7 +274,7 @@ function App() {
                     <PEditor />
                   </MediaQuery>
                   <MediaQuery minWidth={480}>
-                    <MEditor />
+                    {compileMode ? <MCompiler /> : <MEditor />}
                   </MediaQuery>
                 </Route>
               </Switch>
