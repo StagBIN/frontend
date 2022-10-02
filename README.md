@@ -35,4 +35,4 @@
 
 ### Donations
 
-![Sponsors us](https://img.shields.io/badge/donate-34562l?style=for-the-badge&logo=cashapp&logoColor=white)
+<a href="https://www.buymeacoffee.com/vjspranav" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
