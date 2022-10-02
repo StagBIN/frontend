@@ -1,7 +1,21 @@
 import Swal from "sweetalert2";
 
 const compilePython = async (code) => {
+  // Compiling
+  Swal.fire({
+    title: "Compiling...",
+    text: "Please wait...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
   const pyodide = await window.loadPyodide();
+  Swal.close();
+
   try {
     pyodide.runPython(`import sys
 import io
@@ -15,7 +29,7 @@ sys.stdout = io.StringIO()`);
       showConfirmButton: false,
       timer: 1500,
       toast: true,
-      position: "top-end",
+      position: "center-end",
     });
     return stdout;
   } catch (error) {
