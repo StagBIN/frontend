@@ -70,7 +70,7 @@ function ScrollTop(props) {
   );
 }
 
-export default function BackToTop() {
+export default function BackToTop(props) {
   const {
     theme: curTheme,
     readOnly,
@@ -85,7 +85,8 @@ export default function BackToTop() {
   const classes = useStyles();
   // console.log(readOnly);
   return (
-    <React.Fragment>
+    <div>
+      {" "}
       <CssBaseline />
       <AppBar
         style={{
@@ -156,11 +157,11 @@ export default function BackToTop() {
         </Toolbar>
       </AppBar>
       <Toolbar id="back-to-top-anchor" />
-      <ScrollTop>
+      <ScrollTop {...props}>
         <Fab color="secondary" size="small" aria-label="scroll back to top">
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
-    </React.Fragment>
+    </div>
   );
 }
