@@ -1,11 +1,12 @@
 // React
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useState, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import MediaQuery from "react-responsive";
 
 // For Alerts
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Swal from "sweetalert2";
 
 // For Theme
 import { ThemeProvider } from "styled-components";
@@ -54,6 +55,23 @@ function App() {
   let search = window.location.search;
   let params = new URLSearchParams(search);
   let code = params.get("code");
+
+  useEffect(() => {
+    if (localStorage.getItem("python_first_time") === null) {
+      // info
+      // Tell them that compiler is a new feature
+      // If compilemode is not set, then also tell them to click on blue icon on top
+      Swal.fire({
+        title: "Welcome to StagBIN!",
+        text: compileMode
+          ? "StagBin can now run python codes right on your browser, Try writing some code and click on the run button on top."
+          : "Now StagBin can run python codes right on your browser, click on the blue icon on top to enable compiler mode.",
+        icon: "info",
+        confirmButtonText: "Cool",
+      });
+      localStorage.setItem("python_first_time", "false");
+    }
+  });
 
   if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
