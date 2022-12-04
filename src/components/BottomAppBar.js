@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
+import ReportBug from "./ReportBug";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -11,6 +12,12 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     minHeight: "30px",
+  },
+  reportBug: {
+    position: "absolute",
+    right: 20,
+    cursor: "pointer",
+    fontSize: 12,
   },
 }));
 
@@ -35,8 +42,12 @@ export default function BottomAppBar(props) {
           </a>
           <div style={{ margin: "8px" }}>
             <a href="https://github.com/StagBin" style={{ color: "inherit" }}>
-              <h4 style={{ margin: 0 }}>Source</h4>
+              <h4 style={{ margin: 0, fontSize: 14 }}>Source</h4>
             </a>
+          </div>
+
+          <div className={classes.reportBug}>
+            <ReportBug />
           </div>
         </Toolbar>
       </AppBar>

@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useContext } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -9,17 +9,19 @@ import Fab from "@material-ui/core/Fab";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Zoom from "@material-ui/core/Zoom";
 import AddIcon from "@material-ui/icons/Add";
+import CodeIcon from "@material-ui/icons/Code";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from "@material-ui/icons/GetApp";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import Input from "@material-ui/core/Input";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import Swal from "sweetalert2";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
@@ -28,6 +30,12 @@ import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 // Logo
 import logo from "../assets/images/logo.png";
+
+// Compiler
+import compiler from "../utils/compiler";
+
+// Context
+import { StagBinContext } from "../App";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,29 +96,45 @@ function ScrollTop(props) {
 }
 
 export default function BackToTop(props) {
-  const curTheme = props.curTheme;
-  // const isEditing = props.isEditing;
-  const [url, setUrl] = [props.url, props.setUrl];
-  const readOnly = props.readOnly;
-  // console.log(readOnly);
+  const {
+    theme: curTheme,
+    url,
+    compileMode,
+    setUrl,
+    readOnly,
+    invokeSave,
+    language,
+    setLanguage,
+    isMarkdownView,
+    updateIsMarkdownView,
+    isSameContentbuid,
+    base_url,
+    setReadOnly,
+    isDiff,
+    setCompileMode,
+    setIsDiff,
+    edited,
+    setEdited,
+    data,
+    setOldData,
+    setOutput,
+  } = useContext(StagBinContext);
+
   const classes = useStyles();
-  const invokeSave = props.invokeSave;
-  const [language, setLanguage] = [props.language, props.setLanguage];
-  const [isMarkdownView, updateIsMarkdownView] = [
-    props.isMarkdownView,
-    props.updateIsMarkdownView,
-  ];
-  const isSameContentbuid = props.isSameContentbuid;
-  const base_url = props.base_url;
-  // const setContentBuid = props.setContentBuid;
 
-  const setReadOnly = props.setReadOnly;
-  const [isDiff, setIsDiff] = [props.isDiff, props.setIsDiff];
-  const [edited, setEdited] = [props.edited, props.setEdited];
-  const [data, setOldData] = [props.data, props.setOldData];
-
+  const showCustomUrl = !compileMode && true;
+  const showBinLanguages = !compileMode;
+  const showCompileLanguages = compileMode;
+  const showNewIcon = !compileMode; // Will update when we allow managing sessions for compilers
+  const showDownload = !compileMode && readOnly; // Will update when we allow managing sessions for compilers
+  const showMarkdown = !compileMode && language === "markdown";
+  const showDiffIcon = !compileMode && edited;
+  const showEditIcon = !compileMode && readOnly && isSameContentbuid;
+  const showSaveIcon = !compileMode && !readOnly;
+  const showCompilerIcon = !readOnly;
+  const showRunIcon = !readOnly && compileMode;
   return (
-    <React.Fragment>
+    <div>
       <CssBaseline />
       <AppBar
         style={{
@@ -120,86 +144,152 @@ export default function BackToTop(props) {
       >
         <Toolbar className={classes.centerItems}>
           <a
-            href="base_url"
+            href={base_url}
             style={{ color: "inherit", textDecoration: "none" }}
           >
             <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
             {/* <Typography variant="h6">StagBIN</Typography> */}
           </a>
-          <FormControl>
-            <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
-              URL
-            </InputLabel>
-            <Input
-              id="custom-url"
-              type="text"
-              disabled={readOnly || edited ? true : false}
-              value={url}
-              onChange={(e) => {
-                // console.log(e.target.value);
-                setUrl(e.target.value);
-              }}
-              style={{ color: "inherit" }}
-              endAdornment={
-                readOnly ? (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="cop"
-                      color="inherit"
-                      onClick={() => {
-                        navigator.clipboard.writeText(base_url + "/" + url);
-                      }}
-                    >
-                      <FileCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ) : (
-                  ""
-                )
-              }
-            />
-          </FormControl>
-          <div>
-            <FormControl className={classes.formControl}>
-              <InputLabel
-                style={{ color: "inherit" }}
-                id="demo-simple-select-label"
-              >
-                Language
+          {showCustomUrl && (
+            <FormControl>
+              <InputLabel style={{ color: "inherit" }} htmlFor="custom-url">
+                URL
               </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                style={{ color: "inherit" }}
-                value={language}
-                aria-label="Select Language"
-                onChange={(event) => {
-                  setLanguage(event.target.value);
+              <Input
+                id="custom-url"
+                type="text"
+                disabled={readOnly || edited ? true : false}
+                value={url}
+                onChange={(e) => {
+                  // console.log(e.target.value);
+                  setUrl(e.target.value);
                 }}
-              >
-                <MenuItem value="markdown">Markdown</MenuItem>
-                <MenuItem style={{ color: "inherit" }} value="javascript">
-                  Javascript
-                </MenuItem>
-                <MenuItem value="python">Python</MenuItem>
-                <MenuItem value="go">Go Lang</MenuItem>
-                <MenuItem value="html">HTML</MenuItem>
-                <MenuItem value="css">CSS</MenuItem>
-                <MenuItem value="cpp">C/C++</MenuItem>
-                <MenuItem value="java">Java</MenuItem>
-              </Select>
+                style={{ color: "inherit" }}
+                endAdornment={
+                  readOnly && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="cop"
+                        color="inherit"
+                        onClick={() => {
+                          navigator.clipboard.writeText(base_url + "/" + url);
+                        }}
+                      >
+                        <FileCopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }
+              />
             </FormControl>
-            {readOnly ? (
+          )}
+          <div>
+            {showRunIcon && (
+              <Tooltip title="Run">
+                <IconButton
+                  aria-label="run"
+                  color="inherit"
+                  onClick={async () => {
+                    // if code is empty, don't run
+                    if (data === "") {
+                      Swal.fire({
+                        icon: "warning",
+                        title: "Oops...",
+                        text: "Code is empty!",
+                        toast: true,
+                        position: "center-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                    } else {
+                      const temp_output = await compiler(data, language);
+                      setOutput(temp_output);
+                    }
+                  }}
+                >
+                  <PlayArrowIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showCompilerIcon && (
+              <Tooltip
+                title={compileMode ? "Disable Compile Mode" : "Compile Mode"}
+              >
+                <IconButton
+                  aria-label="compile"
+                  color={compileMode ? "inherit" : "primary"}
+                  onClick={() => {
+                    setCompileMode(!compileMode);
+                  }}
+                >
+                  <CodeIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showBinLanguages && (
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  style={{ color: "inherit" }}
+                  id="demo-simple-select-label"
+                >
+                  Language
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  style={{ color: "inherit" }}
+                  value={language}
+                  aria-label="Select Language"
+                  onChange={(event) => {
+                    setLanguage(event.target.value);
+                  }}
+                >
+                  <MenuItem value="markdown">Markdown</MenuItem>
+                  <MenuItem style={{ color: "inherit" }} value="javascript">
+                    Javascript
+                  </MenuItem>
+                  <MenuItem value="python">Python</MenuItem>
+                  <MenuItem value="go">Go Lang</MenuItem>
+                  <MenuItem value="html">HTML</MenuItem>
+                  <MenuItem value="css">CSS</MenuItem>
+                  <MenuItem value="cpp">C/C++</MenuItem>
+                  <MenuItem value="java">Java</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+            {showCompileLanguages && (
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  style={{ color: "inherit" }}
+                  id="demo-simple-select-label-compiler"
+                >
+                  Language
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label-compiler"
+                  id="demo-simple-select-compiler"
+                  style={{ color: "inherit" }}
+                  value={language}
+                  aria-label="Select Language"
+                  onChange={(event) => {
+                    setLanguage(event.target.value);
+                  }}
+                >
+                  <MenuItem value="python">Python</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+            {showDownload && (
               <Tooltip title={"Download Contents"}>
                 <IconButton
-                style={{ marginTop: "5px" }}
+                  style={{ marginTop: "5px" }}
                   edge="end"
                   color="inherit"
                   aria-label="Dowmload Contents"
                   onClick={() => {
                     const element = document.createElement("a");
                     element.style.display = "none";
-                    const file = new Blob([data], {type: 'text/plain'});
+                    const file = new Blob([data], { type: "text/plain" });
                     element.href = URL.createObjectURL(file);
                     element.download = url;
                     document.body.appendChild(element); // Required for this to work in FireFox
@@ -209,10 +299,8 @@ export default function BackToTop(props) {
                   <GetAppIcon />
                 </IconButton>
               </Tooltip>
-            ) : (
-              ""
             )}
-            {readOnly || language === "markdown" ? (
+            {showMarkdown && (
               <Tooltip title={"Markdown " + (readOnly ? "View" : "Preview")}>
                 <IconButton
                   edge="end"
@@ -225,10 +313,8 @@ export default function BackToTop(props) {
                   <MarkdownIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
-            ) : (
-              ""
             )}
-            {edited ? (
+            {showDiffIcon && (
               <Tooltip title="View Differences">
                 <IconButton
                   edge="end"
@@ -241,31 +327,26 @@ export default function BackToTop(props) {
                   <VSCodeDiffIcon />
                 </IconButton>
               </Tooltip>
-            ) : (
-              ""
             )}
-            {readOnly ? (
-              isSameContentbuid ? (
-                <Tooltip title="Edit">
-                  <IconButton
-                    edge="end"
-                    color="inherit"
-                    aria-label="Edit"
-                    onClick={() => {
-                      console.log(data);
-                      setOldData((" " + data).slice(1));
-                      setEdited(true);
-                      setReadOnly(false);
-                      console.log(readOnly);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                ""
-              )
-            ) : (
+            {showEditIcon && (
+              <Tooltip title="Edit">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Edit"
+                  onClick={() => {
+                    console.log(data);
+                    setOldData((" " + data).slice(1));
+                    setEdited(true);
+                    setReadOnly(false);
+                    console.log(readOnly);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showSaveIcon && (
               <Tooltip title="Save">
                 <IconButton
                   edge="end"
@@ -277,18 +358,20 @@ export default function BackToTop(props) {
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title="New Paste">
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="New Paste"
-                onClick={() => {
-                  window.location.href = base_url;
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
+            {showNewIcon && (
+              <Tooltip title="New Paste">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="New Paste"
+                  onClick={() => {
+                    window.location.href = base_url;
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
         </Toolbar>
       </AppBar>
@@ -298,6 +381,6 @@ export default function BackToTop(props) {
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
-    </React.Fragment>
+    </div>
   );
 }

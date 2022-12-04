@@ -10,7 +10,7 @@ import "ace-builds/src-noconflict/theme-twilight";
 // this is an optional import just improved the interaction.
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/ext-beautify";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 // Loading
 import Backdrop from "@material-ui/core/Backdrop";
@@ -18,6 +18,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core";
 
 import { API_URL } from "../Constants";
+import { StagBinContext } from "../App";
 
 let reqData = {};
 const getData = async (
@@ -55,21 +56,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PEditor(props) {
+export default function PEditor() {
+  const {
+    theme: curTheme,
+    readOnly,
+    setReadOnly,
+    isMarkdownView,
+    updateIsMarkdownView,
+    setUrl,
+    data,
+    setData,
+    base_url,
+    setIsSameContentbuid,
+    edited,
+  } = useContext(StagBinContext);
+
   const classes = useStyles();
-  const curTheme = props.curTheme;
-  const readOnly = props.readOnly;
-  //   const language = props.language;
-  const setReadOnly = props.setReadOnly;
-  const [isMarkdownView, updateIsMarkdownView] = [
-    props.isMarkdownView,
-    props.updateIsMarkdownView,
-  ];
-  const setUrl = props.setUrl;
-  const [data, setData] = [props.data, props.setData];
-  const base_url = props.base_url;
-  const setIsSameContentbuid = props.setIsSameContentbuid;
-  const edited = props.edited;
 
   let { id } = useParams();
   const [loading, setLoading] = useState(id ? true : false);

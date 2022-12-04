@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useContext } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -11,16 +11,15 @@ import Zoom from "@material-ui/core/Zoom";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
-// import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FormControl from "@material-ui/core/FormControl";
-// import InputLabel from "@material-ui/core/InputLabel";
-// import InputAdornment from "@material-ui/core/InputAdornment";
 import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-// import Input from "@material-ui/core/Input";
 
 // Logo
 import logo from "../assets/images/logo.png";
+
+// Context
+import { StagBinContext } from "../App";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,21 +71,22 @@ function ScrollTop(props) {
 }
 
 export default function BackToTop(props) {
-  const curTheme = props.curTheme;
-  // const isEditing = props.isEditing;
-  // const [url, setUrl] = [props.url, props.setUrl];
-  const readOnly = props.readOnly;
-  const invokeSave = props.invokeSave;
-  const isSameContentbuid = props.isSameContentbuid;
-  const base_url = props.base_url;
-  const setReadOnly = props.setReadOnly;
-  const setEdited = props.setEdited;
-  const data = props.data;
+  const {
+    theme: curTheme,
+    readOnly,
+    invokeSave,
+    isSameContentbuid,
+    base_url,
+    setReadOnly,
+    setEdited,
+    data,
+  } = useContext(StagBinContext);
 
   const classes = useStyles();
   // console.log(readOnly);
   return (
-    <React.Fragment>
+    <div>
+      {" "}
       <CssBaseline />
       <AppBar
         style={{
@@ -97,7 +97,7 @@ export default function BackToTop(props) {
       >
         <Toolbar className={classes.centerItems}>
           <a
-            href="base_url"
+            href={base_url}
             style={{ color: "inherit", textDecoration: "none" }}
           >
             <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
@@ -162,6 +162,6 @@ export default function BackToTop(props) {
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
-    </React.Fragment>
+    </div>
   );
 }

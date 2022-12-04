@@ -1,30 +1,36 @@
+// React
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, createContext } from "react";
+import MediaQuery from "react-responsive";
+
+// For Alerts
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import Swal from "sweetalert2";
+
+// For Theme
+import { ThemeProvider } from "styled-components";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { GlobalStyles } from "./components/GlobalStyles";
+import { darkTheme } from "./components/Themes";
+
+import axios from "axios";
+import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+
+// For Analytics
+import ReactGA from "react-ga";
+import React from "react";
+
+// Local Imports
 import MEditor from "./components/MonacoEditor";
 import PEditor from "./components/AceEditor";
 import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
 import BottomAppBar from "./components/BottomAppBar";
-
-// For Alerts
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-
-// For Theme
-import { ThemeProvider } from "styled-components";
-import { GlobalStyles } from "./components/GlobalStyles";
-import { darkTheme } from "./components/Themes";
-
-import MediaQuery from "react-responsive";
-import axios from "axios";
-
-import { v4 as uuidv4, validate as uuidValidate } from "uuid";
-
 import { API_URL } from "./Constants";
+import MCompiler from "./components/MonacoCompiler";
 
-// For Analytics
-import ReactGA from "react-ga";
-import React from "react";
+export const StagBinContext = createContext();
 
 function CustomAlert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -41,92 +47,31 @@ const get_and_set_systemid = async () => {
   return system_id;
 };
 
-const patch_save = async (
-  data,
-  id,
-  buid,
-  base_url,
-  setSuccess,
-  setSizeWarning,
-  setDataEmptyError
-) => {
-  const headers = { buid };
-
-  function byteCount(s) {
-    return encodeURI(s).split(/%..|./).length - 1;
-  }
-  const size = byteCount(data) / (1024 * 1024);
-  if (size > 0.4) {
-    setSizeWarning(true);
-    return;
-  }
-  if (data.length < 1) {
-    setDataEmptyError(true);
-    return;
-  }
-
-  const res = await axios.patch(
-    API_URL + id,
-    {
-      data,
-    },
-    { headers }
-  );
-  if (res.status === 200) {
-    navigator.clipboard.writeText(base_url + "/" + res.data.id);
-    setSuccess(true);
-    // console.log(base_url);
-    window.location.href = base_url + "/" + res.data.id;
-  } else {
-    console.log(res.status);
-    console.log(res.data);
-  }
-
-  console.log("Edited:\n", data);
-};
-
-const post_save = async (
-  data,
-  id,
-  buid,
-  base_url,
-  setSuccess,
-  setSizeWarning,
-  setDataEmptyError
-) => {
-  function byteCount(s) {
-    return encodeURI(s).split(/%..|./).length - 1;
-  }
-  const size = byteCount(data) / (1024 * 1024);
-  if (size > 0.4) {
-    setSizeWarning(true);
-    return;
-  }
-  if (data.length < 1) {
-    setDataEmptyError(true);
-    return;
-  }
-
-  const res = await axios.post(API_URL, {
-    data,
-    buid,
-    id,
-  });
-  if (res.status === 200) {
-    navigator.clipboard.writeText(base_url + "/" + res.data.id);
-    setSuccess(true);
-    // console.log(base_url);
-    window.location.href = base_url + "/" + res.data.id;
-  } else {
-    console.log(res.status);
-    console.log(res.data);
-  }
-};
-
 function App() {
   let theme = "dark";
   const base_url = window.location.origin;
   let pageDown = false;
+
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let code = params.get("code");
+
+  useEffect(() => {
+    if (localStorage.getItem("python_first_time") === null) {
+      // info
+      // Tell them that compiler is a new feature
+      // If compilemode is not set, then also tell them to click on blue icon on top
+      Swal.fire({
+        title: "Welcome to StagBIN!",
+        text: compileMode
+          ? "StagBin can now run python codes right on your browser, Try writing some code and click on the run button on top."
+          : "Now StagBin can run python codes right on your browser, click on the blue icon on top to enable compiler mode.",
+        icon: "info",
+        confirmButtonText: "Cool",
+      });
+      localStorage.setItem("python_first_time", "false");
+    }
+  });
 
   if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
@@ -135,9 +80,105 @@ function App() {
   } else if (base_url === "http://test.stagbin.tk") {
     pageDown = false;
   }
+
+  const patch_save = async (
+    data,
+    id,
+    buid,
+    base_url,
+    setSuccess,
+    setSizeWarning,
+    setDataEmptyError
+  ) => {
+    const headers = { buid };
+
+    function byteCount(s) {
+      return encodeURI(s).split(/%..|./).length - 1;
+    }
+    const size = byteCount(data) / (1024 * 1024);
+    if (size > 0.4) {
+      setSizeWarning(true);
+      return;
+    }
+    if (data.length < 1) {
+      setDataEmptyError(true);
+      return;
+    }
+
+    const res = await axios.patch(
+      API_URL + id,
+      {
+        data,
+      },
+      { headers }
+    );
+    if (res.status === 200) {
+      if (navigator.userAgent.indexOf("Safari") === -1)
+        navigator.clipboard.writeText(base_url + "/" + res.data.id);
+      setSuccess(true);
+      // console.log(base_url);
+      // window.location.href = base_url + "/" + res.data.id;
+      setReadOnly(true);
+      // Set the url
+      // window.history.pushState({}, "Stagbin", base_url + "/" + res.data.id);
+      // setUrl(base_url + "/" + res.data.id);
+    } else {
+      console.log(res.status);
+      console.log(res.data);
+    }
+
+    console.log("Edited:\n", data);
+  };
+
+  const post_save = async (
+    data,
+    id,
+    buid,
+    base_url,
+    setSuccess,
+    setSizeWarning,
+    setDataEmptyError
+  ) => {
+    function byteCount(s) {
+      return encodeURI(s).split(/%..|./).length - 1;
+    }
+    const size = byteCount(data) / (1024 * 1024);
+    if (size > 0.4) {
+      setSizeWarning(true);
+      return;
+    }
+    if (data.length < 1) {
+      setDataEmptyError(true);
+      return;
+    }
+
+    const res = await axios.post(API_URL, {
+      data,
+      buid,
+      id,
+    });
+
+    if (res.status === 200) {
+      // Check if safari
+      if (navigator.userAgent.indexOf("Safari") === -1)
+        navigator.clipboard.writeText(base_url + "/" + res.data.id);
+      setSuccess(true);
+      // console.log(base_url);
+      // window.location.href = base_url + "/" + res.data.id;
+      setReadOnly(true);
+      setIsSameContentbuid(true);
+      // Set the url
+      window.history.pushState({}, "Stagbin", base_url + "/" + res.data.id);
+      setUrl(res.data.id);
+    } else {
+      console.log(res.status);
+      console.log(res.data);
+    }
+  };
+
   // const [theme, setTheme] = useState(localTheme ? localTheme : "dark");
   const [readOnly, setReadOnly] = useState(false);
-  const [language, setLanguage] = useState();
+  const [language, setLanguage] = useState("python");
   const [url, setUrl] = useState("");
   const [data, setData] = useState("");
   const [oldData, setOldData] = useState("");
@@ -148,6 +189,9 @@ function App() {
   const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
+  const [compileMode, setCompileMode] = useState(code ? true : false);
+  const [output, setOutput] = useState("Your output here!");
+
   // const themeToggler = () => {
   //   theme === "light" ? setTheme("dark") : setTheme("light");
   //   localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -157,14 +201,14 @@ function App() {
     let charCode = String.fromCharCode(event.which).toLowerCase();
     if (event.ctrlKey && charCode === "s") {
       event.preventDefault();
-      invokeSave();
+      if (!compileMode) invokeSave();
     }
 
     // For Mac
     if (event.metaKey && charCode === "s") {
       event.preventDefault();
       console.log("Cmd + S pressed");
-      invokeSave();
+      if (!compileMode) invokeSave();
     }
   };
 
@@ -207,149 +251,99 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <>
         <GlobalStyles />
-        <div onKeyDown={handleKeyDown} className="App" style={{}}>
-          <Router basename={process.env.PUBLIC_URL}>
-            <div>
-              <MediaQuery maxWidth={480}>
-                <MobileTopAppBar
-                  readOnlyToggle={setReadOnly}
-                  base_url={base_url}
-                  readOnly={readOnly}
-                  curTheme={theme}
-                  isEditing={true}
-                  url={url}
-                  setUrl={setUrl}
-                  data={data}
-                  setData={setData}
-                  oldData={oldData}
-                  setOldData={setOldData}
-                  invokeSave={invokeSave}
-                  isSameContentbuid={isSameContentbuid}
-                  setIsSameContentbuid={setIsSameContentbuid}
-                  edited={edited}
-                  setEdited={setEdited}
-                  setReadOnly={setReadOnly}
-                />
-              </MediaQuery>
-              <MediaQuery minWidth={480}>
-                <TopAppBar
-                  readOnly={readOnly}
-                  readOnlyToggle={setReadOnly}
-                  base_url={base_url}
-                  curTheme={theme}
-                  isEditing={true}
-                  url={url}
-                  setUrl={setUrl}
-                  data={data}
-                  setData={setData}
-                  oldData={oldData}
-                  setOldData={setOldData}
-                  invokeSave={invokeSave}
-                  language={language}
-                  setLanguage={setLanguage}
-                  updateIsMarkdownView={updateIsMarkdownView}
-                  isMarkdownView={isMarkdownView}
-                  ReactGA={ReactGA}
-                  isSameContentbuid={isSameContentbuid}
-                  setIsSameContentbuid={setIsSameContentbuid}
-                  edited={edited}
-                  isDiff={isDiff}
-                  setEdited={setEdited}
-                  setReadOnly={setReadOnly}
-                  setIsDiff={setIsDiff}
-                />
-              </MediaQuery>
-            </div>
-            <Switch>
-              <Route exact path={["/", "/:id"]}>
+        <StagBinContext.Provider
+          value={{
+            base_url,
+            theme,
+            url,
+            compileMode,
+            data,
+            edited,
+            language,
+            oldData,
+            output,
+            readOnly,
+            isDiff,
+            isMarkdownView,
+            isSameContentbuid,
+            setCompileMode,
+            setData,
+            setEdited,
+            setIsDiff,
+            setIsSameContentbuid,
+            setLanguage,
+            setOldData,
+            setOutput,
+            setReadOnly,
+            setUrl,
+            updateIsMarkdownView,
+            invokeSave,
+          }}
+        >
+          <div onKeyDown={handleKeyDown} className="App" style={{}}>
+            <Router basename={process.env.PUBLIC_URL}>
+              <div>
                 <MediaQuery maxWidth={480}>
-                  <PEditor
-                    curTheme={theme}
-                    readOnly={readOnly}
-                    setReadOnly={setReadOnly}
-                    url={url}
-                    setUrl={setUrl}
-                    data={data}
-                    setData={setData}
-                    oldData={oldData}
-                    setOldData={setOldData}
-                    invokeSave={invokeSave}
-                    language={language}
-                    setLanguage={setLanguage}
-                    base_url={base_url}
-                    updateIsMarkdownView={updateIsMarkdownView}
-                    isMarkdownView={isMarkdownView}
-                    setIsSameContentbuid={setIsSameContentbuid}
-                    edited={edited}
-                  />
+                  <MobileTopAppBar />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
-                  <MEditor
-                    curTheme={theme}
-                    readOnly={readOnly}
-                    setReadOnly={setReadOnly}
-                    url={url}
-                    setUrl={setUrl}
-                    data={data}
-                    setData={setData}
-                    oldData={oldData}
-                    setOldData={setOldData}
-                    invokeSave={invokeSave}
-                    language={language}
-                    setLanguage={setLanguage}
-                    base_url={base_url}
-                    updateIsMarkdownView={updateIsMarkdownView}
-                    isMarkdownView={isMarkdownView}
-                    setIsSameContentbuid={setIsSameContentbuid}
-                    edited={edited}
-                    isDiff={isDiff}
-                  />
+                  <TopAppBar />
                 </MediaQuery>
-              </Route>
-            </Switch>
-            <div>
-              <BottomAppBar curTheme={theme} />
-            </div>
-          </Router>
-          <Snackbar
-            open={success}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={3000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="success">
-              {edited
-                ? "Paste edited successfully"
-                : "Paste saved successfully"}
-            </CustomAlert>
-          </Snackbar>
-          <Snackbar
-            open={size_warning}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={6000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="warning">
-              Content cannot be more than 400kb (Increased soon)
-            </CustomAlert>
-          </Snackbar>
-          <Snackbar
-            open={data_empty_error}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={6000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-              Content cannot be empty
-            </CustomAlert>
-          </Snackbar>
-          <Snackbar
-            open={pageDown}
-            onClose={handleCloseSnackBar}
-            autoHideDuration={1000000}
-          >
-            <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-              Internal Server Error, We are working on it
-            </CustomAlert>
-          </Snackbar>
-        </div>
+              </div>
+              <Switch>
+                <Route exact path={["/", "/:id"]}>
+                  <MediaQuery maxWidth={480}>
+                    <PEditor />
+                  </MediaQuery>
+                  <MediaQuery minWidth={480}>
+                    {compileMode ? <MCompiler /> : <MEditor />}
+                  </MediaQuery>
+                </Route>
+              </Switch>
+              <div>
+                <BottomAppBar curTheme={theme} />
+              </div>
+            </Router>
+            <Snackbar
+              open={success}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={3000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="success">
+                {edited
+                  ? "Paste edited successfully"
+                  : "Paste saved successfully"}
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={size_warning}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={6000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="warning">
+                Content cannot be more than 400kb (Increased soon)
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={data_empty_error}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={6000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                Content cannot be empty
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={pageDown}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={1000000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                Internal Server Error, We are working on it
+              </CustomAlert>
+            </Snackbar>
+          </div>
+        </StagBinContext.Provider>
       </>
     </ThemeProvider>
   );
