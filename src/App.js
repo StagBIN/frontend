@@ -135,6 +135,7 @@ function App() {
     id,
     buid,
     base_url,
+    encyrpted,
     setSuccess,
     setSizeWarning,
     setDataEmptyError
@@ -156,6 +157,7 @@ function App() {
       data,
       buid,
       id,
+      isEncrypted: encyrpted,
     });
 
     if (res.status === 200) {
@@ -191,6 +193,11 @@ function App() {
   const [isDiff, setIsDiff] = useState(false);
   const [compileMode, setCompileMode] = useState(code ? true : false);
   const [output, setOutput] = useState("Your output here!");
+
+  // Encryption
+  const [encrypted, setEncrypted] = useState(false);
+  const [encryptedReadOnly, setEncryptedReadOnly] = useState(false);
+  const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
 
   // const themeToggler = () => {
   //   theme === "light" ? setTheme("dark") : setTheme("light");
@@ -230,6 +237,7 @@ function App() {
         url,
         system_id,
         base_url,
+        encrypted,
         setSuccess,
         setSizeWarning,
         setDataEmptyError
@@ -259,8 +267,11 @@ function App() {
             compileMode,
             data,
             edited,
+            encrypted,
+            encryptedReadOnly,
             language,
             oldData,
+            openPasswordDialog,
             output,
             readOnly,
             isDiff,
@@ -269,10 +280,13 @@ function App() {
             setCompileMode,
             setData,
             setEdited,
+            setEncrypted,
+            setEncryptedReadOnly,
             setIsDiff,
             setIsSameContentbuid,
             setLanguage,
             setOldData,
+            setOpenPasswordDialog,
             setOutput,
             setReadOnly,
             setUrl,

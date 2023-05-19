@@ -38,7 +38,7 @@ export default function BottomAppBar(props) {
       >
         <Toolbar className={classes.toolbar}>
           <a href="https://stagbin.tk" style={{ color: "inherit" }}>
-            <small>&copy; Copyright 2021, StagBIN</small>
+            <small>&copy; Copyright 2023, StagBIN</small>
           </a>
           <div style={{ margin: "8px" }}>
             <a href="https://github.com/StagBin" style={{ color: "inherit" }}>

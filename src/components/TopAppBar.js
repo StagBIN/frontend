@@ -1,4 +1,4 @@
-import { React, useContext } from "react";
+import { React, useContext, useState } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -18,6 +18,8 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
+import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import Input from "@material-ui/core/Input";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -36,6 +38,10 @@ import compiler from "../utils/compiler";
 
 // Context
 import { StagBinContext } from "../App";
+
+// For Encryption
+import StringCrypto from "string-crypto";
+import PasswordDialog from "./PasswordDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,6 +106,10 @@ export default function BackToTop(props) {
     theme: curTheme,
     url,
     compileMode,
+    encrypted,
+    setEncrypted,
+    encryptedReadOnly,
+    setEncryptedReadOnly,
     setUrl,
     readOnly,
     invokeSave,
@@ -116,8 +126,11 @@ export default function BackToTop(props) {
     edited,
     setEdited,
     data,
+    setData,
     setOldData,
     setOutput,
+    openPasswordDialog,
+    setOpenPasswordDialog,
   } = useContext(StagBinContext);
 
   const classes = useStyles();
@@ -128,11 +141,41 @@ export default function BackToTop(props) {
   const showNewIcon = !compileMode; // Will update when we allow managing sessions for compilers
   const showDownload = !compileMode && readOnly; // Will update when we allow managing sessions for compilers
   const showMarkdown = !compileMode && language === "markdown";
-  const showDiffIcon = !compileMode && edited;
-  const showEditIcon = !compileMode && readOnly && isSameContentbuid;
-  const showSaveIcon = !compileMode && !readOnly;
+  const showDiffIcon = !compileMode && edited && !encryptedReadOnly;
+  const showEditIcon =
+    !compileMode &&
+    readOnly &&
+    isSameContentbuid &&
+    !encrypted &&
+    !encryptedReadOnly;
+  const showSaveIcon = !compileMode && (!readOnly || encryptedReadOnly) && !url;
   const showCompilerIcon = !readOnly;
   const showRunIcon = !readOnly && compileMode;
+  const showLockIcon = !compileMode && !readOnly && !encrypted;
+  const showUnlockIcon = !compileMode && readOnly && encrypted;
+
+  // For Encryption
+  const [password, setPassword] = useState("");
+  const { encryptString, decryptString } = new StringCrypto();
+
+  const handlePassWordClose = () => {
+    setOpenPasswordDialog(false);
+    if (password.length > 0) {
+      if (encrypted) {
+        console.log(decryptString(data, password));
+        setData(decryptString(data, password));
+        setEncrypted(false);
+        setEncryptedReadOnly(true);
+        setReadOnly(url ? true : false);
+      } else {
+        setReadOnly(true);
+        setEncrypted(true);
+        setData(encryptString(data, password));
+        setEncryptedReadOnly(true);
+      }
+    }
+  };
+
   return (
     <div>
       <CssBaseline />
@@ -223,6 +266,34 @@ export default function BackToTop(props) {
                   }}
                 >
                   <CodeIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showLockIcon && (
+              <Tooltip title="Encrypt">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    setOpenPasswordDialog(true);
+                  }}
+                >
+                  <LockIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showUnlockIcon && (
+              <Tooltip title="Decrypt">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    setOpenPasswordDialog(true);
+                  }}
+                >
+                  <LockOpenIcon />
                 </IconButton>
               </Tooltip>
             )}
@@ -381,6 +452,14 @@ export default function BackToTop(props) {
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
+      <PasswordDialog
+        open={openPasswordDialog}
+        setOpen={setOpenPasswordDialog}
+        password={password}
+        setPassword={setPassword}
+        encrypted={encrypted}
+        handleClose={handlePassWordClose}
+      />
     </div>
   );
 }

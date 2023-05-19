@@ -17,6 +17,9 @@ let reqData = {};
 
 const getData = async (
   setData,
+  setEncrypted,
+  setEncryptedReadOnly,
+  setOpenPasswordDialog,
   id,
   redirect,
   base_url,
@@ -39,6 +42,9 @@ const getData = async (
     reqData = res.data[0];
     console.log(reqData);
     setIsSameContentbuid(reqData.edit);
+    setEncrypted(reqData.isEncrypted || false);
+    setEncryptedReadOnly(reqData.isEncrypted || false);
+    setOpenPasswordDialog(reqData.isEncrypted || false);
     setData(reqData.data);
     setLoading(false);
   }
@@ -57,10 +63,13 @@ const useStyles = makeStyles((theme) => ({
 export default function MEditor() {
   const {
     theme: curTheme,
+    encryptedReadOnly,
     readOnly,
     language,
     setLanguage,
     setReadOnly,
+    setEncrypted,
+    setEncryptedReadOnly,
     setUrl,
     isDiff,
     isMarkdownView,
@@ -69,6 +78,7 @@ export default function MEditor() {
     setData,
     base_url,
     setIsSameContentbuid,
+    setOpenPasswordDialog,
     oldData,
     edited,
   } = useContext(StagBinContext);
@@ -124,9 +134,12 @@ export default function MEditor() {
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited) {
+      if (!edited && !encryptedReadOnly) {
         getData(
           setData,
+          setEncrypted,
+          setEncryptedReadOnly,
+          setOpenPasswordDialog,
           id,
           redirect,
           base_url,
