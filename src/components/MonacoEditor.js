@@ -197,7 +197,7 @@ export default function MEditor() {
         value={data}
         colorDecorators="true"
         options={{
-          readOnly: readOnly,
+          readOnly: readOnly || encryptedReadOnly,
           renderLineHighlight: "none",
         }}
         onChange={(value, event) => {

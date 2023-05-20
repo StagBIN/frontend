@@ -20,10 +20,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import Input from "@material-ui/core/Input";
 import Tooltip from "@material-ui/core/Tooltip";
-import Swal from "sweetalert2";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
@@ -32,9 +30,6 @@ import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 // Logo
 import logo from "../assets/images/logo.png";
-
-// Compiler
-import compiler from "../utils/compiler";
 
 // Context
 import { StagBinContext } from "../App";
@@ -128,31 +123,28 @@ export default function BackToTop(props) {
     data,
     setData,
     setOldData,
-    setOutput,
     openPasswordDialog,
     setOpenPasswordDialog,
+    setDataEmptyError,
   } = useContext(StagBinContext);
 
   const classes = useStyles();
 
-  const showCustomUrl = !compileMode && true;
-  const showBinLanguages = !compileMode;
-  const showCompileLanguages = compileMode;
-  const showNewIcon = !compileMode; // Will update when we allow managing sessions for compilers
-  const showDownload = !compileMode && readOnly; // Will update when we allow managing sessions for compilers
-  const showMarkdown = !compileMode && language === "markdown";
-  const showDiffIcon = !compileMode && edited && !encryptedReadOnly;
+  const showCustomUrl = true;
+  const showBinLanguages = true;
+  const showNewIcon = true; // Will update when we allow managing sessions for compilers
+  const showDownload = readOnly; // Will update when we allow managing sessions for compilers
+  const showMarkdown = language === "markdown";
+  const showDiffIcon = edited && !encryptedReadOnly;
   const showEditIcon =
-    !compileMode &&
-    readOnly &&
-    isSameContentbuid &&
-    !encrypted &&
-    !encryptedReadOnly;
-  const showSaveIcon = !compileMode && (!readOnly || encryptedReadOnly) && !url;
+    readOnly && isSameContentbuid && !encrypted && !encryptedReadOnly;
+  const showSaveIcon =
+    // When it is not encrypted and not read only
+    // When it is encrypted but not read only and encryptedReadOnly
+    (!encrypted && !readOnly) || (encrypted && !readOnly && encryptedReadOnly);
   const showCompilerIcon = !readOnly;
-  const showRunIcon = !readOnly && compileMode;
-  const showLockIcon = !compileMode && !readOnly && !encrypted;
-  const showUnlockIcon = !compileMode && readOnly && encrypted;
+  const showLockIcon = !readOnly && !encrypted;
+  const showUnlockIcon = readOnly && encrypted;
 
   // For Encryption
   const [password, setPassword] = useState("");
@@ -161,17 +153,19 @@ export default function BackToTop(props) {
   const handlePassWordClose = () => {
     setOpenPasswordDialog(false);
     if (password.length > 0) {
-      if (encrypted) {
-        console.log(decryptString(data, password));
-        setData(decryptString(data, password));
-        setEncrypted(false);
-        setEncryptedReadOnly(true);
-        setReadOnly(url ? true : false);
+      if (data.length <= 0) {
+        setDataEmptyError(true);
       } else {
-        setReadOnly(true);
-        setEncrypted(true);
-        setData(encryptString(data, password));
-        setEncryptedReadOnly(true);
+        if (encrypted) {
+          console.log(decryptString(data, password));
+          setData(decryptString(data, password));
+          setEncrypted(false);
+          setEncryptedReadOnly(true);
+        } else {
+          setEncrypted(true);
+          setData(encryptString(data, password));
+          setEncryptedReadOnly(true);
+        }
       }
     }
   };
@@ -227,40 +221,11 @@ export default function BackToTop(props) {
             </FormControl>
           )}
           <div>
-            {showRunIcon && (
-              <Tooltip title="Run">
-                <IconButton
-                  aria-label="run"
-                  color="inherit"
-                  onClick={async () => {
-                    // if code is empty, don't run
-                    if (data === "") {
-                      Swal.fire({
-                        icon: "warning",
-                        title: "Oops...",
-                        text: "Code is empty!",
-                        toast: true,
-                        position: "center-end",
-                        showConfirmButton: false,
-                        timer: 1500,
-                      });
-                    } else {
-                      const temp_output = await compiler(data, language);
-                      setOutput(temp_output);
-                    }
-                  }}
-                >
-                  <PlayArrowIcon />
-                </IconButton>
-              </Tooltip>
-            )}
             {showCompilerIcon && (
-              <Tooltip
-                title={compileMode ? "Disable Compile Mode" : "Compile Mode"}
-              >
+              <Tooltip title="Enable Compile Mode">
                 <IconButton
                   aria-label="compile"
-                  color={compileMode ? "inherit" : "primary"}
+                  color="primary"
                   onClick={() => {
                     setCompileMode(!compileMode);
                   }}
@@ -328,28 +293,7 @@ export default function BackToTop(props) {
                 </Select>
               </FormControl>
             )}
-            {showCompileLanguages && (
-              <FormControl className={classes.formControl}>
-                <InputLabel
-                  style={{ color: "inherit" }}
-                  id="demo-simple-select-label-compiler"
-                >
-                  Language
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label-compiler"
-                  id="demo-simple-select-compiler"
-                  style={{ color: "inherit" }}
-                  value={language}
-                  aria-label="Select Language"
-                  onChange={(event) => {
-                    setLanguage(event.target.value);
-                  }}
-                >
-                  <MenuItem value="python">Python</MenuItem>
-                </Select>
-              </FormControl>
-            )}
+
             {showDownload && (
               <Tooltip title={"Download Contents"}>
                 <IconButton

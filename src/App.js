@@ -26,6 +26,7 @@ import MEditor from "./components/MonacoEditor";
 import PEditor from "./components/AceEditor";
 import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
+import TopAppBarCompiler from "./components/TopAppBarCompiler";
 import BottomAppBar from "./components/BottomAppBar";
 import { API_URL } from "./Constants";
 import MCompiler from "./components/MonacoCompiler";
@@ -279,6 +280,7 @@ function App() {
             isSameContentbuid,
             setCompileMode,
             setData,
+            setDataEmptyError,
             setEdited,
             setEncrypted,
             setEncryptedReadOnly,
@@ -301,7 +303,7 @@ function App() {
                   <MobileTopAppBar />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
-                  <TopAppBar />
+                  {compileMode ? <TopAppBarCompiler /> : <TopAppBar />}
                 </MediaQuery>
               </div>
               <Switch>
