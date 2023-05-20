@@ -1,4 +1,4 @@
-import { React, useContext, useState } from "react";
+import { React, useContext } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -33,10 +33,6 @@ import logo from "../assets/images/logo.png";
 
 // Context
 import { StagBinContext } from "../App";
-
-// For Encryption
-import StringCrypto from "string-crypto";
-import PasswordDialog from "./PasswordDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,9 +98,7 @@ export default function BackToTop(props) {
     url,
     compileMode,
     encrypted,
-    setEncrypted,
     encryptedReadOnly,
-    setEncryptedReadOnly,
     setUrl,
     readOnly,
     invokeSave,
@@ -121,11 +115,8 @@ export default function BackToTop(props) {
     edited,
     setEdited,
     data,
-    setData,
     setOldData,
-    openPasswordDialog,
     setOpenPasswordDialog,
-    setDataEmptyError,
   } = useContext(StagBinContext);
 
   const classes = useStyles();
@@ -145,30 +136,6 @@ export default function BackToTop(props) {
   const showCompilerIcon = !readOnly;
   const showLockIcon = !readOnly && !encrypted;
   const showUnlockIcon = readOnly && encrypted;
-
-  // For Encryption
-  const [password, setPassword] = useState("");
-  const { encryptString, decryptString } = new StringCrypto();
-
-  const handlePassWordClose = () => {
-    setOpenPasswordDialog(false);
-    if (password.length > 0) {
-      if (data.length <= 0) {
-        setDataEmptyError(true);
-      } else {
-        if (encrypted) {
-          console.log(decryptString(data, password));
-          setData(decryptString(data, password));
-          setEncrypted(false);
-          setEncryptedReadOnly(true);
-        } else {
-          setEncrypted(true);
-          setData(encryptString(data, password));
-          setEncryptedReadOnly(true);
-        }
-      }
-    }
-  };
 
   return (
     <div>
@@ -396,14 +363,6 @@ export default function BackToTop(props) {
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>
-      <PasswordDialog
-        open={openPasswordDialog}
-        setOpen={setOpenPasswordDialog}
-        password={password}
-        setPassword={setPassword}
-        encrypted={encrypted}
-        handleClose={handlePassWordClose}
-      />
     </div>
   );
 }

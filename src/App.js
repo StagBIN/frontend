@@ -31,6 +31,10 @@ import BottomAppBar from "./components/BottomAppBar";
 import { API_URL } from "./Constants";
 import MCompiler from "./components/MonacoCompiler";
 
+// For Encryption
+import StringCrypto from "string-crypto";
+import PasswordDialog from "./components/PasswordDialog";
+
 export const StagBinContext = createContext();
 
 function CustomAlert(props) {
@@ -200,6 +204,30 @@ function App() {
   const [encryptedReadOnly, setEncryptedReadOnly] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
 
+  // For Encryption
+  const [password, setPassword] = useState("");
+  const { encryptString, decryptString } = new StringCrypto();
+
+  const handlePassWordClose = () => {
+    setOpenPasswordDialog(false);
+    if (password.length > 0) {
+      if (data.length <= 0) {
+        setDataEmptyError(true);
+      } else {
+        if (encrypted) {
+          console.log(decryptString(data, password));
+          setData(decryptString(data, password));
+          setEncrypted(false);
+          setEncryptedReadOnly(true);
+        } else {
+          setEncrypted(true);
+          setData(encryptString(data, password));
+          setEncryptedReadOnly(true);
+        }
+      }
+    }
+  };
+
   // const themeToggler = () => {
   //   theme === "light" ? setTheme("dark") : setTheme("light");
   //   localStorage.setItem("stagbin_theme", theme === "light" ? "dark" : "light");
@@ -358,6 +386,14 @@ function App() {
                 Internal Server Error, We are working on it
               </CustomAlert>
             </Snackbar>
+            <PasswordDialog
+              open={openPasswordDialog}
+              setOpen={setOpenPasswordDialog}
+              password={password}
+              setPassword={setPassword}
+              encrypted={encrypted}
+              handleClose={handlePassWordClose}
+            />
           </div>
         </StagBinContext.Provider>
       </>
