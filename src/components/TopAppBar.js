@@ -20,6 +20,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+// import RawOnIcon from "@mui/icons-material/RawOn";
+// import RawOffIcon from "@mui/icons-material/RawOff";
 import Input from "@material-ui/core/Input";
 import Tooltip from "@material-ui/core/Tooltip";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -33,6 +35,7 @@ import logo from "../assets/images/logo.png";
 
 // Context
 import { StagBinContext } from "../App";
+import { RAW_URL } from "../Constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,6 +131,7 @@ export default function BackToTop(props) {
   const showMarkdown = language === "markdown";
   const showDiffIcon = edited && !encryptedReadOnly;
   const showEditIcon = readOnly && isSameContentbuid && !encrypted;
+  const showRawIcon = readOnly && !encrypted;
   const showSaveIcon =
     // When it is not encrypted and not read only
     // When it is encrypted but not read only and encryptedReadOnly
@@ -187,6 +191,21 @@ export default function BackToTop(props) {
             </FormControl>
           )}
           <div>
+            {showRawIcon && (
+              <Tooltip title="Raw">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Raw"
+                  onClick={() => {
+                    // Redirect to raw
+                    window.location.href = `${RAW_URL}${url}`;
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            )}
             {showCompilerIcon && (
               <Tooltip title="Enable Compile Mode">
                 <IconButton
