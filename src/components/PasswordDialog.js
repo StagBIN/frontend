@@ -10,6 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 export default function FormDialog(props) {
   const [open] = [props.open];
   const [password, setPassword] = [props.password, props.setPassword];
+  const edited = props.edited;
   const handleClose = props.handleClose;
   const encrypted = props.encrypted;
   return (
@@ -24,7 +25,9 @@ export default function FormDialog(props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {encrypted
+            {edited
+              ? "Please enter password to update it, you can no longer edit the content without saving and reloading the page"
+              : encrypted
               ? "Please enter the password to decrypt the content"
               : "Please enter a password to encrypt your data. Note: This password will be needed to view this data"}
           </DialogContentText>

@@ -18,6 +18,7 @@ let reqData = {};
 const getData = async (
   setData,
   setEncrypted,
+  setOldEncrypted,
   setEncryptedReadOnly,
   setOpenPasswordDialog,
   id,
@@ -43,6 +44,7 @@ const getData = async (
     console.log(reqData);
     setIsSameContentbuid(reqData.edit);
     setEncrypted(reqData.isEncrypted || false);
+    setOldEncrypted(reqData.isEncrypted || false);
     setEncryptedReadOnly(reqData.isEncrypted || false);
     setOpenPasswordDialog(reqData.isEncrypted || false);
     setData(reqData.data);
@@ -69,6 +71,7 @@ export default function MEditor() {
     setLanguage,
     setReadOnly,
     setEncrypted,
+    setOldEncrypted,
     setEncryptedReadOnly,
     setUrl,
     isDiff,
@@ -138,6 +141,7 @@ export default function MEditor() {
         getData(
           setData,
           setEncrypted,
+          setOldEncrypted,
           setEncryptedReadOnly,
           setOpenPasswordDialog,
           id,
@@ -197,7 +201,7 @@ export default function MEditor() {
         value={data}
         colorDecorators="true"
         options={{
-          readOnly: readOnly || encryptedReadOnly,
+          readOnly: readOnly || (encryptedReadOnly && !edited),
           renderLineHighlight: "none",
         }}
         onChange={(value, event) => {

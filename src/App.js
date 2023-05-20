@@ -91,9 +91,12 @@ function App() {
     id,
     buid,
     base_url,
+    encrypted,
+    oldEncrypted,
     setSuccess,
     setSizeWarning,
-    setDataEmptyError
+    setDataEmptyError,
+    setEncryptError
   ) => {
     const headers = { buid };
 
@@ -107,6 +110,11 @@ function App() {
     }
     if (data.length < 1) {
       setDataEmptyError(true);
+      return;
+    }
+
+    if (!encrypted && oldEncrypted) {
+      setEncryptError(true);
       return;
     }
 
@@ -192,6 +200,7 @@ function App() {
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
   const [data_empty_error, setDataEmptyError] = useState(false);
+  const [encrypt_error, setEncryptError] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
   const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
@@ -201,6 +210,7 @@ function App() {
 
   // Encryption
   const [encrypted, setEncrypted] = useState(false);
+  const [oldEncrypted, setOldEncrypted] = useState(false);
   const [encryptedReadOnly, setEncryptedReadOnly] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
 
@@ -256,9 +266,12 @@ function App() {
         url,
         system_id,
         base_url,
+        encrypted,
+        oldEncrypted,
         setSuccess,
         setSizeWarning,
-        setDataEmptyError
+        setDataEmptyError,
+        setEncryptError
       );
     } else {
       post_save(
@@ -282,6 +295,7 @@ function App() {
     setSuccess(false);
     setSizeWarning(false);
     setDataEmptyError(false);
+    setEncryptError(false);
   };
 
   return (
@@ -298,6 +312,8 @@ function App() {
             edited,
             encrypted,
             encryptedReadOnly,
+            oldEncrypted,
+            setOldEncrypted,
             language,
             oldData,
             openPasswordDialog,
@@ -378,6 +394,15 @@ function App() {
               </CustomAlert>
             </Snackbar>
             <Snackbar
+              open={encrypt_error}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={6000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                Content needs to be reencrypted
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
               open={pageDown}
               onClose={handleCloseSnackBar}
               autoHideDuration={1000000}
@@ -393,6 +418,7 @@ function App() {
               setPassword={setPassword}
               encrypted={encrypted}
               handleClose={handlePassWordClose}
+              edited={edited}
             />
           </div>
         </StagBinContext.Provider>

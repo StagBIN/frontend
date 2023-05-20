@@ -127,8 +127,7 @@ export default function BackToTop(props) {
   const showDownload = readOnly; // Will update when we allow managing sessions for compilers
   const showMarkdown = language === "markdown";
   const showDiffIcon = edited && !encryptedReadOnly;
-  const showEditIcon =
-    readOnly && isSameContentbuid && !encrypted && !encryptedReadOnly;
+  const showEditIcon = readOnly && isSameContentbuid && !encrypted;
   const showSaveIcon =
     // When it is not encrypted and not read only
     // When it is encrypted but not read only and encryptedReadOnly
