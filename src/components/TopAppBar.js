@@ -20,14 +20,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-// import RawOnIcon from "@mui/icons-material/RawOn";
-// import RawOffIcon from "@mui/icons-material/RawOff";
 import Input from "@material-ui/core/Input";
 import Tooltip from "@material-ui/core/Tooltip";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
+import RawIcon from "./icons/RawIcon";
 import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 // Logo
@@ -202,7 +201,7 @@ export default function BackToTop(props) {
                     window.location.href = `${RAW_URL}${url}`;
                   }}
                 >
-                  <EditIcon />
+                  <RawIcon />
                 </IconButton>
               </Tooltip>
             )}
