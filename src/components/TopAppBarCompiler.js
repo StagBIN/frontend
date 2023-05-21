@@ -1,22 +1,23 @@
 import { React, useContext } from "react";
 
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Fab from "@material-ui/core/Fab";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import Zoom from "@material-ui/core/Zoom";
-import CodeIcon from "@material-ui/icons/Code";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import Tooltip from "@material-ui/core/Tooltip";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import makeStyles from "@mui/styles/makeStyles";
+import { useTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Fab from "@mui/material/Fab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Zoom from "@mui/material/Zoom";
+import CodeIcon from "@mui/icons-material/Code";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import Tooltip from "@mui/material/Tooltip";
 import Swal from "sweetalert2";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 // Logo
 import logo from "../assets/images/logo.png";
@@ -27,11 +28,11 @@ import compiler from "../utils/compiler";
 // Context
 import { StagBinContext } from "../App";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     position: "fixed",
-    bottom: theme.spacing(1),
-    right: theme.spacing(2),
+    bottom: useTheme().spacing(1),
+    right: useTheme().spacing(2),
     minHeight: "10px",
     zIndex: 99999,
   },
@@ -44,13 +45,13 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
   },
   formControl: {
-    margin: theme.spacing(1),
+    margin: useTheme().spacing(1),
     minWidth: 120,
     marginTop: "-5px",
     color: "inherit",
   },
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    marginTop: useTheme().spacing(2),
   },
 }));
 
@@ -138,6 +139,7 @@ export default function BackToTop(props) {
                     setOutput(temp_output);
                   }
                 }}
+                size="large"
               >
                 <PlayArrowIcon />
               </IconButton>
@@ -150,6 +152,7 @@ export default function BackToTop(props) {
                 onClick={() => {
                   setCompileMode(!compileMode);
                 }}
+                size="large"
               >
                 <CodeIcon />
               </IconButton>

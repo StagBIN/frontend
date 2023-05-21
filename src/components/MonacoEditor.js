@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 // Loading
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/core";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import makeStyles from "@mui/styles/makeStyles";
 
 import { API_URL } from "../Constants";
 import { StagBinContext } from "../App";
-
+import { useTheme } from "@mui/material/styles";
 let reqData = {};
 
 const getData = async (
@@ -55,9 +55,9 @@ const getData = async (
   }
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: useTheme().zIndex.drawer + 1,
     color: "#fff",
   },
 }));

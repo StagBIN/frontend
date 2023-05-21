@@ -1,11 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
+import makeStyles from "@mui/styles/makeStyles";
+import AppBar from "@mui/material/AppBar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Toolbar from "@mui/material/Toolbar";
 import ReportBug from "./ReportBug";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   appBar: {
     bottom: 0,
     top: "auto",
@@ -38,7 +38,9 @@ export default function BottomAppBar(props) {
       >
         <Toolbar className={classes.toolbar}>
           <a href="https://stagbin.tk" style={{ color: "inherit" }}>
-            <small>&copy; Copyright 2023, StagBIN</small>
+            <h4 style={{ margin: 0, fontSize: 14 }}>
+              &copy; Copyright 2023, StagBIN
+            </h4>
           </a>
           <div style={{ margin: "8px" }}>
             <a href="https://github.com/StagBin" style={{ color: "inherit" }}>

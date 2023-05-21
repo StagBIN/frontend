@@ -1,31 +1,31 @@
 import { React, useContext } from "react";
 
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Fab from "@material-ui/core/Fab";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import Zoom from "@material-ui/core/Zoom";
-import AddIcon from "@material-ui/icons/Add";
-import CodeIcon from "@material-ui/icons/Code";
-import SaveIcon from "@material-ui/icons/Save";
-import EditIcon from "@material-ui/icons/Edit";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import LockIcon from "@material-ui/icons/Lock";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-// import RawOnIcon from "@mui/icons-material/RawOn";
-// import RawOffIcon from "@mui/icons-material/RawOff";
-import Input from "@material-ui/core/Input";
-import Tooltip from "@material-ui/core/Tooltip";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import makeStyles from "@mui/styles/makeStyles";
+import { useTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Fab from "@mui/material/Fab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Zoom from "@mui/material/Zoom";
+import AddIcon from "@mui/icons-material/Add";
+import CodeIcon from "@mui/icons-material/Code";
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import RawOnIcon from "@mui/icons-material/RawOn";
+import Input from "@mui/material/Input";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
 import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
@@ -40,8 +40,8 @@ import { RAW_URL } from "../Constants";
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "fixed",
-    bottom: theme.spacing(1),
-    right: theme.spacing(2),
+    bottom: useTheme().spacing(1),
+    right: useTheme().spacing(2),
     minHeight: "10px",
     zIndex: 99999,
   },
@@ -54,13 +54,13 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
   },
   formControl: {
-    margin: theme.spacing(1),
+    margin: useTheme().spacing(1),
     minWidth: 120,
     marginTop: "-5px",
     color: "inherit",
   },
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    marginTop: useTheme().spacing(2),
   },
 }));
 
@@ -181,6 +181,7 @@ export default function BackToTop(props) {
                         onClick={() => {
                           navigator.clipboard.writeText(base_url + "/" + url);
                         }}
+                        size="large"
                       >
                         <FileCopyIcon />
                       </IconButton>
@@ -201,8 +202,9 @@ export default function BackToTop(props) {
                     // Redirect to raw
                     window.location.href = `${RAW_URL}${url}`;
                   }}
+                  size="large"
                 >
-                  <EditIcon />
+                  <RawOnIcon />
                 </IconButton>
               </Tooltip>
             )}
@@ -214,6 +216,7 @@ export default function BackToTop(props) {
                   onClick={() => {
                     setCompileMode(!compileMode);
                   }}
+                  size="large"
                 >
                   <CodeIcon />
                 </IconButton>
@@ -228,6 +231,7 @@ export default function BackToTop(props) {
                   onClick={() => {
                     setOpenPasswordDialog(true);
                   }}
+                  size="large"
                 >
                   <LockIcon />
                 </IconButton>
@@ -242,6 +246,7 @@ export default function BackToTop(props) {
                   onClick={() => {
                     setOpenPasswordDialog(true);
                   }}
+                  size="large"
                 >
                   <LockOpenIcon />
                 </IconButton>
@@ -295,6 +300,7 @@ export default function BackToTop(props) {
                     document.body.appendChild(element); // Required for this to work in FireFox
                     element.click();
                   }}
+                  size="large"
                 >
                   <GetAppIcon />
                 </IconButton>
@@ -309,6 +315,7 @@ export default function BackToTop(props) {
                   onClick={() => {
                     updateIsMarkdownView(!isMarkdownView);
                   }}
+                  size="large"
                 >
                   <MarkdownIcon fontSize="large" />
                 </IconButton>
@@ -323,6 +330,7 @@ export default function BackToTop(props) {
                   onClick={() => {
                     setIsDiff(!isDiff);
                   }}
+                  size="large"
                 >
                   <VSCodeDiffIcon />
                 </IconButton>
@@ -341,6 +349,7 @@ export default function BackToTop(props) {
                     setReadOnly(false);
                     console.log(readOnly);
                   }}
+                  size="large"
                 >
                   <EditIcon />
                 </IconButton>
@@ -353,6 +362,7 @@ export default function BackToTop(props) {
                   color="inherit"
                   aria-label="Save"
                   onClick={invokeSave}
+                  size="large"
                 >
                   <SaveIcon />
                 </IconButton>
@@ -367,6 +377,7 @@ export default function BackToTop(props) {
                   onClick={() => {
                     window.location.href = base_url;
                   }}
+                  size="large"
                 >
                   <AddIcon />
                 </IconButton>

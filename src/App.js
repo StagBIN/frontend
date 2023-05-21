@@ -4,12 +4,13 @@ import { useState, useEffect, createContext } from "react";
 import MediaQuery from "react-responsive";
 
 // For Alerts
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Swal from "sweetalert2";
 
 // For Theme
 import { ThemeProvider } from "styled-components";
+import StyledEngineProvider from "@mui/material/StyledEngineProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { darkTheme } from "./components/Themes";
@@ -299,131 +300,133 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <>
-        <GlobalStyles />
-        <StagBinContext.Provider
-          value={{
-            base_url,
-            theme,
-            url,
-            compileMode,
-            data,
-            edited,
-            encrypted,
-            encryptedReadOnly,
-            oldEncrypted,
-            setOldEncrypted,
-            language,
-            oldData,
-            openPasswordDialog,
-            output,
-            readOnly,
-            isDiff,
-            isMarkdownView,
-            isSameContentbuid,
-            setCompileMode,
-            setData,
-            setDataEmptyError,
-            setEdited,
-            setEncrypted,
-            setEncryptedReadOnly,
-            setIsDiff,
-            setIsSameContentbuid,
-            setLanguage,
-            setOldData,
-            setOpenPasswordDialog,
-            setOutput,
-            setReadOnly,
-            setUrl,
-            updateIsMarkdownView,
-            invokeSave,
-          }}
-        >
-          <div onKeyDown={handleKeyDown} className="App" style={{}}>
-            <Router basename={process.env.PUBLIC_URL}>
-              <div>
-                <MediaQuery maxWidth={480}>
-                  <MobileTopAppBar />
-                </MediaQuery>
-                <MediaQuery minWidth={480}>
-                  {compileMode ? <TopAppBarCompiler /> : <TopAppBar />}
-                </MediaQuery>
-              </div>
-              <Switch>
-                <Route exact path={["/", "/:id"]}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={darkTheme}>
+        <>
+          <GlobalStyles />
+          <StagBinContext.Provider
+            value={{
+              base_url,
+              theme,
+              url,
+              compileMode,
+              data,
+              edited,
+              encrypted,
+              encryptedReadOnly,
+              oldEncrypted,
+              setOldEncrypted,
+              language,
+              oldData,
+              openPasswordDialog,
+              output,
+              readOnly,
+              isDiff,
+              isMarkdownView,
+              isSameContentbuid,
+              setCompileMode,
+              setData,
+              setDataEmptyError,
+              setEdited,
+              setEncrypted,
+              setEncryptedReadOnly,
+              setIsDiff,
+              setIsSameContentbuid,
+              setLanguage,
+              setOldData,
+              setOpenPasswordDialog,
+              setOutput,
+              setReadOnly,
+              setUrl,
+              updateIsMarkdownView,
+              invokeSave,
+            }}
+          >
+            <div onKeyDown={handleKeyDown} className="App" style={{}}>
+              <Router basename={process.env.PUBLIC_URL}>
+                <div>
                   <MediaQuery maxWidth={480}>
-                    <PEditor />
+                    <MobileTopAppBar />
                   </MediaQuery>
                   <MediaQuery minWidth={480}>
-                    {compileMode ? <MCompiler /> : <MEditor />}
+                    {compileMode ? <TopAppBarCompiler /> : <TopAppBar />}
                   </MediaQuery>
-                </Route>
-              </Switch>
-              <div>
-                <BottomAppBar curTheme={theme} />
-              </div>
-            </Router>
-            <Snackbar
-              open={success}
-              onClose={handleCloseSnackBar}
-              autoHideDuration={3000}
-            >
-              <CustomAlert onClose={handleCloseSnackBar} severity="success">
-                {edited
-                  ? "Paste edited successfully"
-                  : "Paste saved successfully"}
-              </CustomAlert>
-            </Snackbar>
-            <Snackbar
-              open={size_warning}
-              onClose={handleCloseSnackBar}
-              autoHideDuration={6000}
-            >
-              <CustomAlert onClose={handleCloseSnackBar} severity="warning">
-                Content cannot be more than 400kb (Increased soon)
-              </CustomAlert>
-            </Snackbar>
-            <Snackbar
-              open={data_empty_error}
-              onClose={handleCloseSnackBar}
-              autoHideDuration={6000}
-            >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-                Content cannot be empty
-              </CustomAlert>
-            </Snackbar>
-            <Snackbar
-              open={encrypt_error}
-              onClose={handleCloseSnackBar}
-              autoHideDuration={6000}
-            >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-                Content needs to be reencrypted
-              </CustomAlert>
-            </Snackbar>
-            <Snackbar
-              open={pageDown}
-              onClose={handleCloseSnackBar}
-              autoHideDuration={1000000}
-            >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
-                Internal Server Error, We are working on it
-              </CustomAlert>
-            </Snackbar>
-            <PasswordDialog
-              open={openPasswordDialog}
-              setOpen={setOpenPasswordDialog}
-              password={password}
-              setPassword={setPassword}
-              encrypted={encrypted}
-              handleClose={handlePassWordClose}
-              edited={edited}
-            />
-          </div>
-        </StagBinContext.Provider>
-      </>
-    </ThemeProvider>
+                </div>
+                <Switch>
+                  <Route exact path={["/", "/:id"]}>
+                    <MediaQuery maxWidth={480}>
+                      <PEditor />
+                    </MediaQuery>
+                    <MediaQuery minWidth={480}>
+                      {compileMode ? <MCompiler /> : <MEditor />}
+                    </MediaQuery>
+                  </Route>
+                </Switch>
+                <div>
+                  <BottomAppBar curTheme={theme} />
+                </div>
+              </Router>
+              <Snackbar
+                open={success}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={3000}
+              >
+                <CustomAlert onClose={handleCloseSnackBar} severity="success">
+                  {edited
+                    ? "Paste edited successfully"
+                    : "Paste saved successfully"}
+                </CustomAlert>
+              </Snackbar>
+              <Snackbar
+                open={size_warning}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+              >
+                <CustomAlert onClose={handleCloseSnackBar} severity="warning">
+                  Content cannot be more than 400kb (Increased soon)
+                </CustomAlert>
+              </Snackbar>
+              <Snackbar
+                open={data_empty_error}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+              >
+                <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                  Content cannot be empty
+                </CustomAlert>
+              </Snackbar>
+              <Snackbar
+                open={encrypt_error}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+              >
+                <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                  Content needs to be reencrypted
+                </CustomAlert>
+              </Snackbar>
+              <Snackbar
+                open={pageDown}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={1000000}
+              >
+                <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+                  Internal Server Error, We are working on it
+                </CustomAlert>
+              </Snackbar>
+              <PasswordDialog
+                open={openPasswordDialog}
+                setOpen={setOpenPasswordDialog}
+                password={password}
+                setPassword={setPassword}
+                encrypted={encrypted}
+                handleClose={handlePassWordClose}
+                edited={edited}
+              />
+            </div>
+          </StagBinContext.Provider>
+        </>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }
 

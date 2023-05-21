@@ -1,19 +1,21 @@
 import { React, useContext } from "react";
 
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Fab from "@material-ui/core/Fab";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import Zoom from "@material-ui/core/Zoom";
-import AddIcon from "@material-ui/icons/Add";
-import SaveIcon from "@material-ui/icons/Save";
-import EditIcon from "@material-ui/icons/Edit";
-import FormControl from "@material-ui/core/FormControl";
-import { Tooltip } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import makeStyles from "@mui/styles/makeStyles";
+import { useTheme } from "@mui/material/styles";
+
+import CssBaseline from "@mui/material/CssBaseline";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Fab from "@mui/material/Fab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Zoom from "@mui/material/Zoom";
+import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import FormControl from "@mui/material/FormControl";
+import { Tooltip } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 
 // Logo
 import logo from "../assets/images/logo.png";
@@ -21,11 +23,11 @@ import logo from "../assets/images/logo.png";
 // Context
 import { StagBinContext } from "../App";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     position: "fixed",
-    bottom: theme.spacing(1),
-    right: theme.spacing(2),
+    bottom: useTheme().spacing(1),
+    right: useTheme().spacing(2),
     minHeight: "10px",
     zIndex: 9999,
   },
@@ -122,6 +124,7 @@ export default function BackToTop(props) {
                       setReadOnly(false);
                       console.log(readOnly);
                     }}
+                    size="large"
                   >
                     <EditIcon />
                   </IconButton>
@@ -136,6 +139,7 @@ export default function BackToTop(props) {
                   color="inherit"
                   aria-label="Save"
                   onClick={invokeSave}
+                  size="large"
                 >
                   <SaveIcon />
                 </IconButton>
@@ -149,6 +153,7 @@ export default function BackToTop(props) {
                 onClick={() => {
                   window.location.href = base_url;
                 }}
+                size="large"
               >
                 <AddIcon />
               </IconButton>
