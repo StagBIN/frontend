@@ -26,7 +26,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
 import MarkdownIcon from "./icons/MarkdownIcon";
-import RawIcon from "./icons/RawIcon";
 import VSCodeDiffIcon from "./icons/VSCodeDiffIcon";
 
 // Logo
@@ -193,6 +192,13 @@ export default function BackToTop(props) {
             {showRawIcon && (
               <Tooltip title="Raw">
                 <IconButton
+                  style={{
+                    fontSize: "15px",
+                    border: "1px solid",
+                    borderRadius: "5px",
+                    padding: "3px",
+                    marginRight: "5px",
+                  }}
                   edge="end"
                   color="inherit"
                   aria-label="Raw"
@@ -201,7 +207,7 @@ export default function BackToTop(props) {
                     window.location.href = `${RAW_URL}${url}`;
                   }}
                 >
-                  <RawIcon />
+                  RAW
                 </IconButton>
               </Tooltip>
             )}
