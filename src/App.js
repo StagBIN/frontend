@@ -62,19 +62,16 @@ function App() {
   let code = params.get("code");
 
   useEffect(() => {
-    if (localStorage.getItem("python_first_time") === null) {
+    if (localStorage.getItem("enc_first_time") === null) {
       // info
-      // Tell them that compiler is a new feature
-      // If compilemode is not set, then also tell them to click on blue icon on top
+      // Tell them that encryption is a new feature
       Swal.fire({
         title: "Welcome to StagBIN!",
-        text: compileMode
-          ? "StagBin can now run python codes right on your browser, Try writing some code and click on the run button on top."
-          : "Now StagBin can run python codes right on your browser, click on the blue icon on top to enable compiler mode.",
+        text: "StagBIN now has support for encryption! You can now encrypt your code or any data with a password and share it with your friends!",
         icon: "info",
         confirmButtonText: "Cool",
       });
-      localStorage.setItem("python_first_time", "false");
+      localStorage.setItem("enc_first_time", "false");
     }
   });
 
