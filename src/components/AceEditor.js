@@ -26,6 +26,9 @@ const getData = async (
   id,
   base_url,
   setIsSameContentbuid,
+  setEncrypted,
+  setEncryptedReadOnly,
+  setOpenPasswordDialog,
   setLoading
 ) => {
   // setLoading(true);
@@ -41,6 +44,9 @@ const getData = async (
     reqData = res.data[0];
     // console.log(reqData);
     setIsSameContentbuid(reqData.edit);
+    setEncrypted(reqData.isEncrypted || false);
+    setEncryptedReadOnly(reqData.isEncrypted || false);
+    setOpenPasswordDialog(reqData.isEncrypted || false);
     setData(reqData.data);
     setLoading(false);
   }
@@ -66,6 +72,10 @@ export default function PEditor() {
     setUrl,
     data,
     setData,
+    encryptedReadOnly,
+    setEncrypted,
+    setEncryptedReadOnly,
+    setOpenPasswordDialog,
     base_url,
     setIsSameContentbuid,
     edited,
@@ -86,8 +96,17 @@ export default function PEditor() {
       }
       if (!(!readOnly && edited)) setReadOnly(true);
       setUrl(id);
-      if (!edited)
-        getData(setData, id, base_url, setIsSameContentbuid, setLoading);
+      if (!edited && !encryptedReadOnly)
+        getData(
+          setData,
+          id,
+          base_url,
+          setIsSameContentbuid,
+          setEncrypted,
+          setEncryptedReadOnly,
+          setOpenPasswordDialog,
+          setLoading
+        );
     }
   }
   set_data_if_exists();

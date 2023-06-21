@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import Editor, { DiffEditor } from "@monaco-editor/react";
 import MDEditor from "@uiw/react-md-editor";
@@ -17,6 +17,10 @@ let reqData = {};
 
 const getData = async (
   setData,
+  setEncrypted,
+  setOldEncrypted,
+  setEncryptedReadOnly,
+  setOpenPasswordDialog,
   id,
   redirect,
   base_url,
@@ -39,6 +43,10 @@ const getData = async (
     reqData = res.data[0];
     console.log(reqData);
     setIsSameContentbuid(reqData.edit);
+    setEncrypted(reqData.isEncrypted || false);
+    setOldEncrypted(reqData.isEncrypted || false);
+    setEncryptedReadOnly(reqData.isEncrypted || false);
+    setOpenPasswordDialog(reqData.isEncrypted || false);
     setData(reqData.data);
     setLoading(false);
   }
@@ -57,10 +65,14 @@ const useStyles = makeStyles((theme) => ({
 export default function MEditor() {
   const {
     theme: curTheme,
+    encryptedReadOnly,
     readOnly,
     language,
     setLanguage,
     setReadOnly,
+    setEncrypted,
+    setOldEncrypted,
+    setEncryptedReadOnly,
     setUrl,
     isDiff,
     isMarkdownView,
@@ -69,6 +81,7 @@ export default function MEditor() {
     setData,
     base_url,
     setIsSameContentbuid,
+    setOpenPasswordDialog,
     oldData,
     edited,
   } = useContext(StagBinContext);
@@ -82,62 +95,71 @@ export default function MEditor() {
   // console.log(redirect);
 
   const [loading, setLoading] = useState(id ? true : false);
-  function set_data_if_exists() {
-    if (id) {
-      if (id.indexOf(".") !== -1) {
-        let ext = id.split(".").at(-1);
-        id = id.split(".")[0];
-        switch (ext) {
-          case "md":
-          case "markdown":
-            updateIsMarkdownView(true);
-            break;
-          case "js":
-          case "javascript":
-            setLanguage("javascript");
-            break;
-          case "c":
-          case "cpp":
-            setLanguage("cpp");
-            break;
-          case "py":
-          case "python":
-            setLanguage("python");
-            break;
-          case "html":
-            setLanguage("html");
-            break;
-          case "css":
-            setLanguage("css");
-            break;
-          case "java":
-            setLanguage("java");
-            break;
-          case "go":
-            setLanguage("go");
-            break;
-          default:
-            break;
+
+  useEffect(() => {
+    function set_data_if_exists() {
+      if (id) {
+        if (id.indexOf(".") !== -1) {
+          let ext = id.split(".").at(-1);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          id = id.split(".")[0];
+          switch (ext) {
+            case "md":
+            case "markdown":
+              updateIsMarkdownView(true);
+              break;
+            case "js":
+            case "javascript":
+              setLanguage("javascript");
+              break;
+            case "c":
+            case "cpp":
+              setLanguage("cpp");
+              break;
+            case "py":
+            case "python":
+              setLanguage("python");
+              break;
+            case "html":
+              setLanguage("html");
+              break;
+            case "css":
+              setLanguage("css");
+              break;
+            case "java":
+              setLanguage("java");
+              break;
+            case "go":
+              setLanguage("go");
+              break;
+            default:
+              break;
+          }
+        } else {
+          setLanguage("javascript");
         }
-      } else {
-        setLanguage("javascript");
-      }
-      if (!(!readOnly && edited)) setReadOnly(true);
-      setUrl(id);
-      if (!edited) {
-        getData(
-          setData,
-          id,
-          redirect,
-          base_url,
-          setIsSameContentbuid,
-          setLoading
-        );
+        if (!(!readOnly && edited)) setReadOnly(true);
+        setUrl(id);
+        if (!edited && !encryptedReadOnly) {
+          getData(
+            setData,
+            setEncrypted,
+            setOldEncrypted,
+            setEncryptedReadOnly,
+            setOpenPasswordDialog,
+            id,
+            redirect,
+            base_url,
+            setIsSameContentbuid,
+            setLoading
+          );
+        }
       }
     }
-  }
 
-  set_data_if_exists();
+    set_data_if_exists();
+  }, []);
+
   // if (data) {
   //   document.getElementById("m-placeholder").style.display = "none";
   // }
@@ -184,7 +206,7 @@ export default function MEditor() {
         value={data}
         colorDecorators="true"
         options={{
-          readOnly: readOnly,
+          readOnly: readOnly || (encryptedReadOnly && !edited),
           renderLineHighlight: "none",
         }}
         onChange={(value, event) => {

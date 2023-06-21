@@ -8,17 +8,21 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Fab from "@material-ui/core/Fab";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Zoom from "@material-ui/core/Zoom";
-import AddIcon from "@material-ui/icons/Add";
-import SaveIcon from "@material-ui/icons/Save";
-import EditIcon from "@material-ui/icons/Edit";
-import LockIcon from "@material-ui/icons/Lock";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
+import CodeIcon from "@material-ui/icons/Code";
 import FormControl from "@material-ui/core/FormControl";
-import { Tooltip } from "@material-ui/core";
+import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/IconButton";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import Tooltip from "@material-ui/core/Tooltip";
+import Swal from "sweetalert2";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 // Logo
 import logo from "../assets/images/logo.png";
+
+// Compiler
+import compiler from "../utils/compiler";
 
 // Context
 import { StagBinContext } from "../App";
@@ -29,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(1),
     right: theme.spacing(2),
     minHeight: "10px",
-    zIndex: 9999,
+    zIndex: 99999,
   },
   centerItems: {
     justifyContent: "space-between",
@@ -38,6 +42,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginLeft: "500px",
     paddingBottom: "15px",
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    marginTop: "-5px",
+    color: "inherit",
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -75,31 +88,24 @@ function ScrollTop(props) {
 export default function BackToTop(props) {
   const {
     theme: curTheme,
-    readOnly,
-    invokeSave,
-    isSameContentbuid,
+    compileMode,
+    language,
+    setLanguage,
     base_url,
-    setReadOnly,
-    setEdited,
+    setCompileMode,
     data,
-    encrypted,
-    setOpenPasswordDialog,
+    setOutput,
   } = useContext(StagBinContext);
 
-  const showLockIcon = !readOnly && !encrypted;
-  const showUnlockIcon = readOnly && encrypted;
-
   const classes = useStyles();
-  // console.log(readOnly);
+
   return (
     <div>
-      {" "}
       <CssBaseline />
       <AppBar
         style={{
           background: curTheme === "light" ? "white" : "#363537",
           color: "inherit",
-          zIndex: 999,
         }}
       >
         <Toolbar className={classes.centerItems}>
@@ -108,86 +114,67 @@ export default function BackToTop(props) {
             style={{ color: "inherit", textDecoration: "none" }}
           >
             <img src={logo} alt={"StagBIN"} style={{ width: "100px" }} />
+            {/* <Typography variant="h6">StagBIN</Typography> */}
           </a>
-          <FormControl
-            style={{
-              marginLeft: "30px",
-              marginTop: "0",
-            }}
-          ></FormControl>
-          <div style={{ display: "inline-flex" }}>
-            {showLockIcon && (
-              <Tooltip title="Encrypt">
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  aria-label="Save"
-                  onClick={() => {
-                    setOpenPasswordDialog(true);
-                  }}
-                >
-                  <LockIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            {showUnlockIcon && (
-              <Tooltip title="Decrypt">
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  aria-label="Save"
-                  onClick={() => {
-                    setOpenPasswordDialog(true);
-                  }}
-                >
-                  <LockOpenIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            {readOnly ? (
-              isSameContentbuid ? (
-                <Tooltip title="Edit">
-                  <IconButton
-                    edge="end"
-                    color="inherit"
-                    aria-label="Save"
-                    onClick={() => {
-                      console.log(data);
-                      setEdited(true);
-                      setReadOnly(false);
-                      console.log(readOnly);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                ""
-              )
-            ) : (
-              <Tooltip title="Save">
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  aria-label="Save"
-                  onClick={invokeSave}
-                >
-                  <SaveIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title="New Paste">
+          <div>
+            <Tooltip title="Run">
               <IconButton
-                edge="end"
+                aria-label="run"
                 color="inherit"
-                aria-label="Save"
-                onClick={() => {
-                  window.location.href = base_url;
+                onClick={async () => {
+                  // if code is empty, don't run
+                  if (data === "") {
+                    Swal.fire({
+                      icon: "warning",
+                      title: "Oops...",
+                      text: "Code is empty!",
+                      toast: true,
+                      position: "center-end",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  } else {
+                    const temp_output = await compiler(data, language);
+                    setOutput(temp_output);
+                  }
                 }}
               >
-                <AddIcon />
+                <PlayArrowIcon />
               </IconButton>
             </Tooltip>
+
+            <Tooltip title="Disable Compile Mode">
+              <IconButton
+                aria-label="compile"
+                color="inherit"
+                onClick={() => {
+                  setCompileMode(!compileMode);
+                }}
+              >
+                <CodeIcon />
+              </IconButton>
+            </Tooltip>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel
+                style={{ color: "inherit" }}
+                id="demo-simple-select-label-compiler"
+              >
+                Language
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label-compiler"
+                id="demo-simple-select-compiler"
+                style={{ color: "inherit" }}
+                value={language}
+                aria-label="Select Language"
+                onChange={(event) => {
+                  setLanguage(event.target.value);
+                }}
+              >
+                <MenuItem value="python">Python</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         </Toolbar>
       </AppBar>

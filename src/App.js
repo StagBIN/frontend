@@ -26,9 +26,14 @@ import MEditor from "./components/MonacoEditor";
 import PEditor from "./components/AceEditor";
 import MobileTopAppBar from "./components/MobileTopAppBar";
 import TopAppBar from "./components/TopAppBar";
+import TopAppBarCompiler from "./components/TopAppBarCompiler";
 import BottomAppBar from "./components/BottomAppBar";
 import { API_URL } from "./Constants";
 import MCompiler from "./components/MonacoCompiler";
+
+// For Encryption
+import StringCrypto from "string-crypto";
+import PasswordDialog from "./components/PasswordDialog";
 
 export const StagBinContext = createContext();
 
@@ -86,9 +91,12 @@ function App() {
     id,
     buid,
     base_url,
+    encrypted,
+    oldEncrypted,
     setSuccess,
     setSizeWarning,
-    setDataEmptyError
+    setDataEmptyError,
+    setEncryptError
   ) => {
     const headers = { buid };
 
@@ -102,6 +110,11 @@ function App() {
     }
     if (data.length < 1) {
       setDataEmptyError(true);
+      return;
+    }
+
+    if (!encrypted && oldEncrypted) {
+      setEncryptError(true);
       return;
     }
 
@@ -135,6 +148,7 @@ function App() {
     id,
     buid,
     base_url,
+    encyrpted,
     setSuccess,
     setSizeWarning,
     setDataEmptyError
@@ -156,6 +170,7 @@ function App() {
       data,
       buid,
       id,
+      isEncrypted: encyrpted,
     });
 
     if (res.status === 200) {
@@ -185,12 +200,43 @@ function App() {
   const [success, setSuccess] = useState(false);
   const [size_warning, setSizeWarning] = useState(false);
   const [data_empty_error, setDataEmptyError] = useState(false);
+  const [encrypt_error, setEncryptError] = useState(false);
   const [isMarkdownView, updateIsMarkdownView] = useState(false);
   const [isSameContentbuid, setIsSameContentbuid] = useState("");
   const [edited, setEdited] = useState(false);
   const [isDiff, setIsDiff] = useState(false);
   const [compileMode, setCompileMode] = useState(code ? true : false);
   const [output, setOutput] = useState("Your output here!");
+
+  // Encryption
+  const [encrypted, setEncrypted] = useState(false);
+  const [oldEncrypted, setOldEncrypted] = useState(false);
+  const [encryptedReadOnly, setEncryptedReadOnly] = useState(false);
+  const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
+
+  // For Encryption
+  const [password, setPassword] = useState("");
+  const { encryptString, decryptString } = new StringCrypto();
+
+  const handlePassWordClose = () => {
+    setOpenPasswordDialog(false);
+    if (password.length > 0) {
+      if (data.length <= 0) {
+        setDataEmptyError(true);
+      } else {
+        if (encrypted) {
+          console.log(decryptString(data, password));
+          setData(decryptString(data, password));
+          setEncrypted(false);
+          setEncryptedReadOnly(true);
+        } else {
+          setEncrypted(true);
+          setData(encryptString(data, password));
+          setEncryptedReadOnly(true);
+        }
+      }
+    }
+  };
 
   // const themeToggler = () => {
   //   theme === "light" ? setTheme("dark") : setTheme("light");
@@ -220,9 +266,12 @@ function App() {
         url,
         system_id,
         base_url,
+        encrypted,
+        oldEncrypted,
         setSuccess,
         setSizeWarning,
-        setDataEmptyError
+        setDataEmptyError,
+        setEncryptError
       );
     } else {
       post_save(
@@ -230,6 +279,7 @@ function App() {
         url,
         system_id,
         base_url,
+        encrypted,
         setSuccess,
         setSizeWarning,
         setDataEmptyError
@@ -245,6 +295,7 @@ function App() {
     setSuccess(false);
     setSizeWarning(false);
     setDataEmptyError(false);
+    setEncryptError(false);
   };
 
   return (
@@ -259,8 +310,13 @@ function App() {
             compileMode,
             data,
             edited,
+            encrypted,
+            encryptedReadOnly,
+            oldEncrypted,
+            setOldEncrypted,
             language,
             oldData,
+            openPasswordDialog,
             output,
             readOnly,
             isDiff,
@@ -268,11 +324,15 @@ function App() {
             isSameContentbuid,
             setCompileMode,
             setData,
+            setDataEmptyError,
             setEdited,
+            setEncrypted,
+            setEncryptedReadOnly,
             setIsDiff,
             setIsSameContentbuid,
             setLanguage,
             setOldData,
+            setOpenPasswordDialog,
             setOutput,
             setReadOnly,
             setUrl,
@@ -287,7 +347,7 @@ function App() {
                   <MobileTopAppBar />
                 </MediaQuery>
                 <MediaQuery minWidth={480}>
-                  <TopAppBar />
+                  {compileMode ? <TopAppBarCompiler /> : <TopAppBar />}
                 </MediaQuery>
               </div>
               <Switch>
@@ -329,8 +389,17 @@ function App() {
               onClose={handleCloseSnackBar}
               autoHideDuration={6000}
             >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              <CustomAlert onClose={handleCloseSnackBar} severity="error">
                 Content cannot be empty
+              </CustomAlert>
+            </Snackbar>
+            <Snackbar
+              open={encrypt_error}
+              onClose={handleCloseSnackBar}
+              autoHideDuration={6000}
+            >
+              <CustomAlert onClose={handleCloseSnackBar} severity="error">
+                Content needs to be reencrypted
               </CustomAlert>
             </Snackbar>
             <Snackbar
@@ -338,10 +407,19 @@ function App() {
               onClose={handleCloseSnackBar}
               autoHideDuration={1000000}
             >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              <CustomAlert onClose={handleCloseSnackBar} severity="error">
                 Internal Server Error, We are working on it
               </CustomAlert>
             </Snackbar>
+            <PasswordDialog
+              open={openPasswordDialog}
+              setOpen={setOpenPasswordDialog}
+              password={password}
+              setPassword={setPassword}
+              encrypted={encrypted}
+              handleClose={handlePassWordClose}
+              edited={edited}
+            />
           </div>
         </StagBinContext.Provider>
       </>
