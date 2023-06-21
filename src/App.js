@@ -389,7 +389,7 @@ function App() {
               onClose={handleCloseSnackBar}
               autoHideDuration={6000}
             >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              <CustomAlert onClose={handleCloseSnackBar} severity="error">
                 Content cannot be empty
               </CustomAlert>
             </Snackbar>
@@ -398,7 +398,7 @@ function App() {
               onClose={handleCloseSnackBar}
               autoHideDuration={6000}
             >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              <CustomAlert onClose={handleCloseSnackBar} severity="error">
                 Content needs to be reencrypted
               </CustomAlert>
             </Snackbar>
@@ -407,7 +407,7 @@ function App() {
               onClose={handleCloseSnackBar}
               autoHideDuration={1000000}
             >
-              <CustomAlert onClose={handleCloseSnackBar} severity="Error">
+              <CustomAlert onClose={handleCloseSnackBar} severity="error">
                 Internal Server Error, We are working on it
               </CustomAlert>
             </Snackbar>

@@ -11,6 +11,8 @@ import Zoom from "@material-ui/core/Zoom";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
+import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 import FormControl from "@material-ui/core/FormControl";
 import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -80,7 +82,12 @@ export default function BackToTop(props) {
     setReadOnly,
     setEdited,
     data,
+    encrypted,
+    setOpenPasswordDialog,
   } = useContext(StagBinContext);
+
+  const showLockIcon = !readOnly && !encrypted;
+  const showUnlockIcon = readOnly && encrypted;
 
   const classes = useStyles();
   // console.log(readOnly);
@@ -109,6 +116,34 @@ export default function BackToTop(props) {
             }}
           ></FormControl>
           <div style={{ display: "inline-flex" }}>
+            {showLockIcon && (
+              <Tooltip title="Encrypt">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    setOpenPasswordDialog(true);
+                  }}
+                >
+                  <LockIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {showUnlockIcon && (
+              <Tooltip title="Decrypt">
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="Save"
+                  onClick={() => {
+                    setOpenPasswordDialog(true);
+                  }}
+                >
+                  <LockOpenIcon />
+                </IconButton>
+              </Tooltip>
+            )}
             {readOnly ? (
               isSameContentbuid ? (
                 <Tooltip title="Edit">
