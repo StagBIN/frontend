@@ -75,11 +75,11 @@ function App() {
     }
   });
 
-  if (base_url === "http://stagbin.tk" || base_url === "https://stagbin.tk") {
+  if (base_url === "http://stagb.in" || base_url === "https://stagb.in") {
     const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
     ReactGA.initialize(TRACKING_ID);
     ReactGA.pageview(window.location.pathname + window.location.search);
-  } else if (base_url === "http://test.stagbin.tk") {
+  } else if (base_url === "http://test.stagb.in") {
     pageDown = false;
   }
 
