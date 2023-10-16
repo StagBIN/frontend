@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Modal, Button, Form } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -66,6 +67,14 @@ function ReportBug() {
               size="sm"
               type="submit"
               style={{ float: "right" }}
+              onClick={() => {
+                Swal.fire({
+                  title: "FEATURE WIP",
+                  text: "SORRY !! ",
+                  icon: "warning",
+                  confirmButtonText: "Cool",
+                });
+              }}
             >
               Submit Bug
             </Button>
