@@ -70,7 +70,7 @@ function ReportBug() {
               onClick={() => {
                 Swal.fire({
                   title: "FEATURE WIP",
-                  text: "SORRY !! ",
+                  text: "SORRY !!! ",
                   icon: "warning",
                   confirmButtonText: "Cool",
                 });
