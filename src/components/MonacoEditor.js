@@ -212,19 +212,25 @@ export default function MEditor() {
         onChange={(value, event) => {
           setData(value);
         }}
+        loading={<CircularProgress />}
       />
     </div>
   );
 
   const mkeditor = (
     <div
-      className="container"
       style={{
         overflow: "hidden",
         paddingBottom: "30px",
+        width: "100%",
       }}
     >
-      <MDEditor.Markdown source={data} />
+      <MDEditor.Markdown
+        source={data}
+        style={{
+          height: "100%",
+        }}
+      />
     </div>
   );
   // console.log(language);
