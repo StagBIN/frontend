@@ -228,7 +228,7 @@ export default function MEditor() {
       <MDEditor.Markdown
         source={data}
         style={{
-          height: "100vh",
+          height: "100%",
         }}
       />
     </div>
