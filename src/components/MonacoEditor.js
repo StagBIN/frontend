@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core";
 
 import { API_URL } from "../Constants";
 import { StagBinContext } from "../App";
+import detectLanguage from "../utils/language";
 
 let reqData = {};
 
@@ -21,6 +22,7 @@ const getData = async (
   setOldEncrypted,
   setEncryptedReadOnly,
   setOpenPasswordDialog,
+  setLanguage,
   id,
   redirect,
   base_url,
@@ -49,6 +51,7 @@ const getData = async (
     setOpenPasswordDialog(reqData.isEncrypted || false);
     setData(reqData.data);
     setLoading(false);
+    if (id.indexOf(".") === -1) setLanguage(detectLanguage(reqData.data));
   }
   if (reqData.url && !redirect) {
     window.location = reqData.data;
@@ -135,8 +138,6 @@ export default function MEditor() {
             default:
               break;
           }
-        } else {
-          setLanguage("javascript");
         }
         if (!(!readOnly && edited)) setReadOnly(true);
         setUrl(id);
@@ -147,6 +148,7 @@ export default function MEditor() {
             setOldEncrypted,
             setEncryptedReadOnly,
             setOpenPasswordDialog,
+            setLanguage,
             id,
             redirect,
             base_url,
@@ -154,6 +156,7 @@ export default function MEditor() {
             setLoading
           );
         }
+      } else {
       }
     }
 
