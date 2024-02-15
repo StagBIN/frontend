@@ -1,4 +1,10 @@
 import { useState, useContext, useEffect } from "react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
 
 import Editor, { DiffEditor } from "@monaco-editor/react";
 import MDEditor from "@uiw/react-md-editor";
@@ -8,7 +14,7 @@ import axios from "axios";
 // Loading
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles } from "@material-ui/core";
 
 import { API_URL } from "../Constants";
 import { StagBinContext } from "../App";
@@ -98,6 +104,21 @@ export default function MEditor() {
   // console.log(redirect);
 
   const [loading, setLoading] = useState(id ? true : false);
+
+  // AI
+  const [open, setOpen] = useState(false);
+  const [explanation, setExplanation] = useState("");
+
+  const handleOpen = () => {
+    setOpen(true);
+    setInterval(() => {
+      setExplanation("We are still learning...");
+    }, 3000);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     function set_data_if_exists() {
@@ -243,6 +264,43 @@ export default function MEditor() {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Button
+        color="primary"
+        aria-label="add"
+        variant="contained"
+        onClick={handleOpen}
+        style={{
+          position: "fixed",
+          bottom: "40px",
+          right: "20px",
+          opacity: "0.7",
+          size: "large",
+          display: data ? "block" : "none",
+        }}
+      >
+        Explain Content
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Explanation</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {!explanation && "Understanding your content..."}
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="100%"
+            >
+              {explanation ? explanation : <CircularProgress />}
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
