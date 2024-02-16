@@ -16,7 +16,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Box, makeStyles } from "@material-ui/core";
 
-import { API_URL } from "../Constants";
+import { API_URL, EXPLAIN_URL } from "../Constants";
 import { StagBinContext } from "../App";
 import detectLanguage from "../utils/language";
 
@@ -111,13 +111,20 @@ export default function MEditor() {
 
   const handleOpen = () => {
     setOpen(true);
-    setInterval(() => {
-      setExplanation("We are still learning...");
-    }, 3000);
+    axios
+      .post(EXPLAIN_URL, { data: data })
+      .then((res) => {
+        setExplanation(res.data.body);
+      })
+      .catch((err) => {
+        console.log(err);
+        setExplanation("Failed to understand the content");
+      });
   };
 
   const handleClose = () => {
     setOpen(false);
+    setExplanation("");
   };
 
   useEffect(() => {
