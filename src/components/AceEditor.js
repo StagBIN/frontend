@@ -19,6 +19,7 @@ import { makeStyles } from "@material-ui/core";
 
 import { API_URL } from "../Constants";
 import { StagBinContext } from "../App";
+import ExplainDialog from "./ExplainDialog";
 
 let reqData = {};
 const getData = async (
@@ -85,6 +86,7 @@ export default function PEditor() {
 
   let { id } = useParams();
   const [loading, setLoading] = useState(id ? true : false);
+
   function set_data_if_exists() {
     if (id) {
       if (id.indexOf(".") !== -1) {
@@ -152,6 +154,7 @@ export default function PEditor() {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      <ExplainDialog data={data} />
     </div>
   );
 }
