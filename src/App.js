@@ -1,6 +1,6 @@
 // React
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useRef } from "react";
 import MediaQuery from "react-responsive";
 
 // For Alerts
@@ -75,13 +75,17 @@ function App() {
     }
   });
 
-  if (base_url === "http://stagb.in" || base_url === "https://stagb.in") {
-    const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
-    ReactGA.initialize(TRACKING_ID);
-    ReactGA.pageview(window.location.pathname + window.location.search);
-  } else if (base_url === "http://test.stagb.in") {
-    pageDown = false;
-  }
+  const pageDownRef = useRef(false);
+
+  useEffect(() => {
+    if (base_url === "http://stagb.in" || base_url === "https://stagb.in") {
+      const TRACKING_ID = "UA-195260575-1"; // YOUR_OWN_TRACKING_ID
+      ReactGA.initialize(TRACKING_ID);
+      ReactGA.pageview(window.location.pathname + window.location.search);
+    } else if (base_url === "http://test.stagb.in") {
+      pageDownRef.current = false;
+    }
+  }, [base_url]);
 
   const patch_save = async (
     data,
