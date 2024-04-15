@@ -62,16 +62,16 @@ function App() {
   let code = params.get("code");
 
   useEffect(() => {
-    if (localStorage.getItem("enc_first_time") === null) {
+    if (localStorage.getItem("ttl_first_time") === null) {
       // info
       // Tell them that encryption is a new feature
       Swal.fire({
         title: "Welcome to StagBIN!",
-        text: "StagBIN now has support for encryption! You can now encrypt your code or any data with a password and share it with your friends!",
+        text: "StagBIN now offers automatic deletion for pastes after 7 days to keep things tidy! But don't worry, control is coming soon. You'll be able to adjust this timing or even set your pastes to never expire.",
         icon: "info",
         confirmButtonText: "Cool",
       });
-      localStorage.setItem("enc_first_time", "false");
+      localStorage.setItem("ttl_first_time", "false");
     }
   });
 
