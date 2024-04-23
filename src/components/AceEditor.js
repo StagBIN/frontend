@@ -117,11 +117,16 @@ export default function PEditor() {
     <div
       className="container"
       style={{
-        overflow: "hidden",
         paddingBottom: "30px",
       }}
     >
-      <MDEditor.Markdown source={data} />
+      <MDEditor.Markdown
+        style={{
+          overflow: "auto",
+        }}
+        enableScroll={true}
+        source={data}
+      />
     </div>
   );
 
