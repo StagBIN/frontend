@@ -224,7 +224,6 @@ export default function MEditor() {
   const mkeditor = (
     <div
       style={{
-        overflow: "hidden",
         paddingBottom: "30px",
         width: "100%",
       }}
@@ -233,7 +232,9 @@ export default function MEditor() {
         source={data}
         style={{
           height: "100%",
+          overflow: "auto",
         }}
+        enableScroll={true}
       />
     </div>
   );
