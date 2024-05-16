@@ -62,16 +62,16 @@ function App() {
   let code = params.get("code");
 
   useEffect(() => {
-    if (localStorage.getItem("ttl_first_time") === null) {
+    if (localStorage.getItem("ttl_second_time") === null) {
       // info
       // Tell them that encryption is a new feature
       Swal.fire({
         title: "Welcome to StagBIN!",
-        text: "StagBIN now offers automatic deletion for pastes after 7 days to keep things tidy! But don't worry, control is coming soon. You'll be able to adjust this timing or even set your pastes to never expire.",
+        text: "StagBIN now offers automatic deletion for pastes after 7 days to keep things tidy! But don't worry, you can use the dropdown to adjust this timing or even set your pastes to never expire.",
         icon: "info",
         confirmButtonText: "Cool",
       });
-      localStorage.setItem("ttl_first_time", "false");
+      localStorage.setItem("ttl_second_time", "false");
     }
   });
 
@@ -150,6 +150,7 @@ function App() {
     buid,
     base_url,
     encyrpted,
+    expirationTime,
     setSuccess,
     setSizeWarning,
     setDataEmptyError
@@ -172,6 +173,7 @@ function App() {
       buid,
       id,
       isEncrypted: encyrpted,
+      expire: expirationTime,
     });
 
     if (res.status === 200) {
@@ -218,6 +220,9 @@ function App() {
   // For Encryption
   const [password, setPassword] = useState("");
   const { encryptString, decryptString } = new StringCrypto();
+
+  // Expiration
+  const [expirationTime, setExpirationTime] = useState(604800);
 
   const handlePassWordClose = () => {
     setOpenPasswordDialog(false);
@@ -281,6 +286,7 @@ function App() {
         system_id,
         base_url,
         encrypted,
+        expirationTime,
         setSuccess,
         setSizeWarning,
         setDataEmptyError
@@ -314,7 +320,7 @@ function App() {
             encrypted,
             encryptedReadOnly,
             oldEncrypted,
-            setOldEncrypted,
+            expirationTime,
             language,
             oldData,
             openPasswordDialog,
@@ -329,10 +335,12 @@ function App() {
             setEdited,
             setEncrypted,
             setEncryptedReadOnly,
+            setExpirationTime,
             setIsDiff,
             setIsSameContentbuid,
             setLanguage,
             setOldData,
+            setOldEncrypted,
             setOpenPasswordDialog,
             setOutput,
             setReadOnly,

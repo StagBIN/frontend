@@ -100,6 +100,7 @@ export default function BackToTop(props) {
     compileMode,
     encrypted,
     encryptedReadOnly,
+    expirationTime,
     setUrl,
     readOnly,
     invokeSave,
@@ -118,6 +119,7 @@ export default function BackToTop(props) {
     data,
     setOldData,
     setOpenPasswordDialog,
+    setExpirationTime,
   } = useContext(StagBinContext);
 
   const classes = useStyles();
@@ -283,7 +285,30 @@ export default function BackToTop(props) {
                 </Select>
               </FormControl>
             )}
-
+            {!readOnly && (
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  style={{ color: "inherit" }}
+                  id="expiration-time-label"
+                >
+                  Expiration Time
+                </InputLabel>
+                <Select
+                  labelId="expiration-time-label"
+                  id="expiration-time-select"
+                  style={{ color: "inherit" }}
+                  value={expirationTime}
+                  aria-label="Select Expiration Time"
+                  onChange={(event) => setExpirationTime(event.target.value)}
+                >
+                  <MenuItem value={false}>Never</MenuItem>
+                  <MenuItem value={3600}>1 Hour</MenuItem>
+                  <MenuItem value={86400}>1 Day</MenuItem>
+                  <MenuItem value={604800}>1 Week</MenuItem>
+                  <MenuItem value={2592000}>1 Month</MenuItem>
+                </Select>
+              </FormControl>
+            )}
             {showDownload && (
               <Tooltip title={"Download Contents"}>
                 <IconButton
