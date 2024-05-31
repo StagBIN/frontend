@@ -17,6 +17,10 @@ import FormControl from "@material-ui/core/FormControl";
 import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+
 // Logo
 import logo from "../assets/images/logo.png";
 
@@ -79,8 +83,10 @@ export default function BackToTop(props) {
     invokeSave,
     isSameContentbuid,
     base_url,
+    expirationTime,
     setReadOnly,
     setEdited,
+    setExpirationTime,
     data,
     encrypted,
     setOpenPasswordDialog,
@@ -115,6 +121,30 @@ export default function BackToTop(props) {
               marginTop: "0",
             }}
           ></FormControl>
+          {!readOnly && (
+            <FormControl className={classes.formControl}>
+              <InputLabel
+                style={{ color: "inherit" }}
+                id="expiration-time-label"
+              >
+                Expire in
+              </InputLabel>
+              <Select
+                labelId="expiration-time-label"
+                id="expiration-time-select"
+                style={{ color: "inherit" }}
+                value={expirationTime}
+                aria-label="Select Expiration Time"
+                onChange={(event) => setExpirationTime(event.target.value)}
+              >
+                <MenuItem value={false}>Never</MenuItem>
+                <MenuItem value={3600}>1 Hour</MenuItem>
+                <MenuItem value={86400}>1 Day</MenuItem>
+                <MenuItem value={604800}>1 Week</MenuItem>
+                <MenuItem value={2592000}>1 Month</MenuItem>
+              </Select>
+            </FormControl>
+          )}
           <div style={{ display: "inline-flex" }}>
             {showLockIcon && (
               <Tooltip title="Encrypt">
